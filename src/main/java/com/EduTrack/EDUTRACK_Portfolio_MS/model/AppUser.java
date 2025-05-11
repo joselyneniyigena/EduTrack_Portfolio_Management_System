@@ -6,22 +6,23 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class LearningUnit {
+public class AppUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
-    private String objective;
-    private String description;
-    private String learningOutcome;
-
-    @ManyToOne
-    @JoinColumn(name = "module_course_id")
-    private ModuleCourse module;
+    private String username;
+    private LocalDateTime registrationDate;
+    private String password;
+    private String email;
+    private boolean enabled;
+    private Long referenceId;
 }

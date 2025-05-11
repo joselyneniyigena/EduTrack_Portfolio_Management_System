@@ -2,6 +2,7 @@ package com.EduTrack.EDUTRACK_Portfolio_MS.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class TradeModule {
 
     @Id
@@ -17,7 +19,7 @@ public class TradeModule {
 
     @ManyToOne
     @JoinColumn(name = "module_course_id")
-    private ModuleCourse moduleCourse;
+    private ModuleCourse module;
 
     @ManyToOne
     @JoinColumn(name = "trade_id")

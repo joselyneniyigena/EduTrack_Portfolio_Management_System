@@ -1,6 +1,5 @@
-package com.EduTrack.EDUTRACK_Portfolio_MS.model;
+package com.EduTrack.EDUTRACK_Portfolio_MS.dto;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,18 +7,13 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Trainer {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class TraineeDTO {
     private Long id;
-
-    @Column(unique = true)
-    private String trainerId;
+    private String traineeId;
     private String firstName;
     private String lastName;
     private LocalDate dob;

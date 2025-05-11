@@ -2,6 +2,7 @@ package com.EduTrack.EDUTRACK_Portfolio_MS.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "role_id"})})
+@Builder
 public class UserRole {
 
     @Id
@@ -18,9 +19,12 @@ public class UserRole {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private AppUser user;
 
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
+
+    @Column(unique = true)
+    private String uniqueKey;
 }

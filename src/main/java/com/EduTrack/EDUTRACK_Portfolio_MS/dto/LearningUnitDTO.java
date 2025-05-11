@@ -1,27 +1,19 @@
-package com.EduTrack.EDUTRACK_Portfolio_MS.model;
+package com.EduTrack.EDUTRACK_Portfolio_MS.dto;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class LearningUnit {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class LearningUnitDTO {
     private Long id;
     private String name;
     private String objective;
     private String description;
     private String learningOutcome;
-
-    @ManyToOne
-    @JoinColumn(name = "module_course_id")
-    private ModuleCourse module;
+    private Long moduleId;
 }

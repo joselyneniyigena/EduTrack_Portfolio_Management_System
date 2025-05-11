@@ -7,7 +7,7 @@ import java.util.List;
 public interface ModuleCourseService {
     ModuleCourse save(ModuleCourse moduleCourse);
     ModuleCourse findById(Long id);
-    List<ModuleCourse> findByType(String type);
+    List<ModuleCourse> findByType(ModuleCourse.ModuleType type);
     List<ModuleCourse> findAll();
     ModuleCourse update(ModuleCourse moduleCourse);
     void deleteById(Long id);

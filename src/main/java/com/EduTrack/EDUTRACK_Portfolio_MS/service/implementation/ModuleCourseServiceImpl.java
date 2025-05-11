@@ -24,7 +24,7 @@ public class ModuleCourseServiceImpl implements ModuleCourseService {
     }
 
     @Override
-    public List<ModuleCourse> findByType(String type) {
+    public List<ModuleCourse> findByType(ModuleCourse.ModuleType type) {
         return repository.findByType(type);
     }
 

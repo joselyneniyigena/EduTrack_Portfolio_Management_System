@@ -1,12 +1,12 @@
 package com.EduTrack.EDUTRACK_Portfolio_MS.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "users")
 public class AppUser {
 
     @Id
@@ -21,8 +22,11 @@ public class AppUser {
     private Long id;
     private String username;
     private LocalDateTime registrationDate;
+
+    @JsonIgnore
     private String password;
+
     private String email;
     private boolean enabled;
-    private Long referenceId;
+    private String userReference;
 }

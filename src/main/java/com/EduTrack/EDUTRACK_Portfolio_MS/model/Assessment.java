@@ -1,5 +1,6 @@
 package com.EduTrack.EDUTRACK_Portfolio_MS.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,21 +30,53 @@ public class Assessment {
     @Enumerated(EnumType.STRING)
     private AssessmentLocation location;
 
-    private String term;
+    @ManyToOne
+    @JoinColumn(name = "term_id")
+    private Term term;
 
     @ManyToOne
     @JoinColumn(name = "trainer_module_id")
     private TrainerModule trainerModule;
 
     public enum AssessmentType {
-        FORMATIVE, INTEGRATED
+        FORMATIVE, INTEGRATED;
+
+        @JsonCreator
+        public static AssessmentType fromString(String value) {
+            return AssessmentType.valueOf(value.toUpperCase());
+        }
+
+        @Override
+        public String toString() {
+            return name();
+        }
     }
 
     public enum AssessmentCategory {
-        PRACTICAL, WRITTEN, PRESENTATION, INTERVIEW
+        PRACTICAL, WRITTEN, PRESENTATION, INTERVIEW;
+
+        @JsonCreator
+        public static AssessmentCategory fromString(String value) {
+            return AssessmentCategory.valueOf(value.toUpperCase());
+        }
+
+        @Override
+        public String toString() {
+            return name();
+        }
     }
 
     public enum AssessmentLocation {
-        CLASS, SITE, ONLINE
+        CLASS, SITE, ONLINE;
+
+        @JsonCreator
+        public static AssessmentLocation fromString(String value) {
+            return AssessmentLocation.valueOf(value.toUpperCase());
+        }
+
+        @Override
+        public String toString() {
+            return name();
+        }
     }
 }

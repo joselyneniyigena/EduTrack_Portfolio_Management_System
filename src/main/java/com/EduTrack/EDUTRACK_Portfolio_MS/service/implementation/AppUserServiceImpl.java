@@ -29,9 +29,9 @@ public class AppUserServiceImpl implements AppUserService {
 
         existing.setUsername(updatedUser.getUsername());
         existing.setEmail(updatedUser.getEmail());
-        existing.setPassword(updatedUser.getPassword()); // Consider hashing
+        existing.setPassword(updatedUser.getPassword());
         existing.setEnabled(updatedUser.isEnabled());
-        existing.setUserReference(updatedUser.getUserReference()); // Updated line
+        existing.setUserReference(updatedUser.getUserReference());
 
         return appUserRepository.save(existing);
     }

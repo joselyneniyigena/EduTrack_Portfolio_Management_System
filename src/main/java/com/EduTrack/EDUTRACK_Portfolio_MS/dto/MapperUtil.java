@@ -128,7 +128,7 @@ public class MapperUtil {
         assessment.setType(dto.getType() != null ? Assessment.AssessmentType.valueOf(dto.getType()) : null);
         assessment.setDateTime(dto.getDateTime());
         assessment.setCategory(dto.getCategory() != null ? Assessment.AssessmentCategory.valueOf(dto.getCategory()) : null);
-        assessment.setLocation(dto.getLocation() != null ? Assessment.Location.valueOf(dto.getLocation()) : null);
+        assessment.setLocation(dto.getLocation() != null ? Assessment.AssessmentLocation.valueOf(dto.getLocation()) : null);
         assessment.setTerm(dto.getTerm());
         return assessment;
     }

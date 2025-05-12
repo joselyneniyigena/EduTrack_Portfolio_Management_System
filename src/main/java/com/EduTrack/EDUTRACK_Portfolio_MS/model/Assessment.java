@@ -27,7 +27,7 @@ public class Assessment {
     private AssessmentCategory category;
 
     @Enumerated(EnumType.STRING)
-    private Location location;
+    private AssessmentLocation location;
 
     private String term;
 
@@ -43,7 +43,7 @@ public class Assessment {
         PRACTICAL, WRITTEN, PRESENTATION, INTERVIEW
     }
 
-    public enum Location {
+    public enum AssessmentLocation {
         CLASS, SITE, ONLINE
     }
 }

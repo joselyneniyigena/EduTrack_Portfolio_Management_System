@@ -5,8 +5,12 @@ import com.EduTrack.EDUTRACK_Portfolio_MS.model.Role;
 import com.EduTrack.EDUTRACK_Portfolio_MS.model.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
-    Optional<UserRole> findByUserAndRole(AppUser appUser, Role role);
+    List<UserRole> findByUser(AppUser user);
+    List<UserRole> findByRole(Role role);
+    Optional<UserRole> findByUserAndRole(AppUser user, Role role);
+    boolean existsByUserAndRole(AppUser user, Role role);
 }

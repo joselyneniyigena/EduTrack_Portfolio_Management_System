@@ -11,6 +11,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(
+        name = "user_role",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "role_id"})}
+)
 public class UserRole {
 
     @Id
@@ -25,6 +29,4 @@ public class UserRole {
     @JoinColumn(name = "role_id")
     private Role role;
 
-    @Column(unique = true)
-    private String uniqueKey;
 }

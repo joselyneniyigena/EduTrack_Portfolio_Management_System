@@ -20,5 +20,10 @@ public class LearningUnitAssessment {
     @JoinColumn(name = "assessment_id")
     private Assessment assessment;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private UnitAssessmentStatus status;
+
+    public enum UnitAssessmentStatus {
+        PENDING, COMPLETED, IN_PROGRESS
+    }
 }

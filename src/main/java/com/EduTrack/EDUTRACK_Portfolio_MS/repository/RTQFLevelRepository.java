@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface RTQFLevelRepository extends JpaRepository<RTQFLevel, Long> {
-    Optional<RTQFLevel> findByName(String name);
+    boolean existsByName(String name);
 }

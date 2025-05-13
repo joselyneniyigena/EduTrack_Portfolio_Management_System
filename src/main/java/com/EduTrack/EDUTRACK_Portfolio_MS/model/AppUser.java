@@ -22,10 +22,7 @@ public class AppUser {
     private Long id;
     private String username;
     private LocalDateTime registrationDate;
-
-    @JsonIgnore
     private String password;
-
     private String email;
     private boolean enabled;
     private String userReference;

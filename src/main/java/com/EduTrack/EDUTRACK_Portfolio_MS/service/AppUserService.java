@@ -1,17 +1,17 @@
 package com.EduTrack.EDUTRACK_Portfolio_MS.service;
 
-import com.EduTrack.EDUTRACK_Portfolio_MS.model.AppUser;
+import com.EduTrack.EDUTRACK_Portfolio_MS.model.User;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface AppUserService {
-    AppUser createUser(AppUser user);
-    AppUser updateUser(Long id, AppUser user);
+    User createUser(User user);
+    User updateUser(Long id, User user);
     void deleteUser(Long id);
-    List<AppUser> getAllUsers();
-    Optional<AppUser> getUserById(Long id);
-    Optional<AppUser> findByUsername(String username);
+    List<User> getAllUsers();
+    Optional<User> getUserById(Long id);
+    Optional<User> findByUsername(String username);
     void enableUser(Long id);
     void disableUser(Long id);
 }

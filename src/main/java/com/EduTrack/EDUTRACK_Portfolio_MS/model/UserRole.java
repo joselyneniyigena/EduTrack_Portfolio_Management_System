@@ -1,5 +1,6 @@
 package com.EduTrack.EDUTRACK_Portfolio_MS.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,7 +24,8 @@ public class UserRole {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private AppUser user;
+    @JsonBackReference
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "role_id")

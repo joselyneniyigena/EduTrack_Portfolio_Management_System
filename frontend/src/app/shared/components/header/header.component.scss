@@ -1,0 +1,1181 @@
+// ==========================================
+// SCSS VARIABLES & MIXINS
+// ==========================================
+
+// Color Palette (example - adjust to your brand)
+$color-primary: #3b82f6;      // Blue-500
+$color-primary-dark: #1d4ed8; // Blue-700
+$color-accent: #f97316;       // Orange-500 (example for messages badge)
+$color-warn: #ef4444;         // Red-500 (example for notifications badge)
+$color-success: #10b981;      // Green-500 (for online status)
+
+$color-dark-bg-start: #1e293b; // Slate-800
+$color-dark-bg-end: #334155;   // Slate-700
+
+$color-text-light: white;
+$color-text-light-subtle: rgba(255, 255, 255, 0.7);
+$color-text-dark: #1e293b;    // Slate-800
+$color-text-muted: #64748b;   // Slate-500
+$color-text-placeholder: rgba(255, 255, 255, 0.6);
+
+$color-border-light: rgba(255, 255, 255, 0.1);
+$color-border-dark: #e2e8f0; // Slate-200
+
+// Backgrounds
+$bg-light-hover: rgba(255, 255, 255, 0.1); // For light-themed elements on dark bg
+$bg-light-active: rgba(255, 255, 255, 0.15);
+$bg-dark-hover: #f1f5f9; // Slate-100
+$bg-dark-active: #e2e8f0; // Slate-200
+$bg-light-faint: #f8fafc; // Slate-50
+
+// Spacing
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 40px;
+
+// Border Radius
+$radius-sm: 8px;
+$radius-md: 12px;
+$radius-lg: 16px;
+$radius-pill: 9999px;
+
+// Shadows
+$shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 20px rgba(0, 0, 0, 0.08);
+$shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.15);
+$shadow-primary-sm: 0 4px 12px rgba($color-primary, 0.3);
+$shadow-primary-md: 0 6px 16px rgba($color-primary, 0.4);
+
+// Transitions
+$transition-ease: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+$transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+// Z-index
+$z-header: 1100;
+$z-spinner: 1200;
+
+// Mixins for consistent sizing
+@mixin icon-size($size) {
+  font-size: $size !important;
+  width: $size !important;
+  height: $size !important;
+}
+
+@mixin button-square($size) {
+  width: $size !important;
+  height: $size !important;
+  min-width: $size !important;
+  min-height: $size !important;
+  padding: 0 !important; // Ensure no default padding from Material
+}
+
+@mixin avatar-base($size, $border-color) {
+  width: $size !important;
+  height: $size !important;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid $border-color;
+  transition: border-color 0.3s ease;
+}
+
+@mixin placeholder-style($size) {
+  width: $size !important;
+  height: $size !important;
+  border-radius: 50%;
+  background: linear-gradient(135deg, $color-primary, $color-primary-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: $color-text-light;
+}
+
+
+// ==========================================
+// MAIN HEADER CONTAINER
+// ==========================================
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: $z-header;
+  height: 96px; // Increased height
+  padding: 0 $spacing-xl;
+  background: linear-gradient(135deg, $color-dark-bg-start 0%, $color-dark-bg-end 100%);
+  box-shadow: $shadow-md;
+  border-bottom: 1px solid $color-border-light;
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+
+  // Angular Material Toolbar overrides
+  &.mat-toolbar {
+    background: linear-gradient(135deg, $color-dark-bg-start 0%, $color-dark-bg-end 100%); // Re-apply for safety
+    color: $color-text-light;
+    min-height: 96px; // Increased min-height
+    height: 96px; // Increased height
+    padding: 0 $spacing-xl;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+  }
+
+  // More specific Material toolbar classes
+  &.mat-toolbar.mat-toolbar-row,
+  &.mat-toolbar.mat-toolbar-single-row {
+    padding: 0 $spacing-xl;
+    height: 96px; // Increased height
+    min-height: 96px; // Increased min-height
+    max-height: 96px; // Increased max-height
+  }
+
+  // Ensure consistent box-sizing for all descendants
+  * {
+    box-sizing: border-box;
+  }
+}
+
+// ==========================================
+// LEFT SECTION - BRANDING & MENU
+// ==========================================
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: $spacing-lg;
+  flex-shrink: 0;
+  min-width: 350px;
+  height: 100%;
+
+  .menu-button {
+    color: $color-text-light-subtle;
+    transition: $transition-ease;
+    border-radius: $radius-md;
+    @include button-square(56px); // Slightly larger button
+    height: 56px !important; // Explicit height to match icon/logo alignment
+
+    &:hover {
+      background-color: $bg-light-hover;
+      color: $color-text-light;
+      transform: scale(1.05);
+    }
+
+    mat-icon {
+      @include icon-size(28px); // Slightly larger icon
+    }
+  }
+
+  .app-branding {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    height: 100%;
+
+    .logo-container {
+      position: relative; // For potential badge/overlay
+
+      .app-logo {
+        height: 56px; // Adjusted logo height
+        width: auto;
+        border-radius: $radius-md;
+      }
+
+      .logo-placeholder {
+        @include placeholder-style(56px); // Adjusted placeholder size
+        box-shadow: $shadow-primary-md;
+
+        .logo-icon {
+          @include icon-size(32px); // Adjusted icon size
+        }
+      }
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+      gap: $spacing-xs;
+      justify-content: center;
+      height: 100%;
+
+      .app-title {
+        font-size: 24px; // Slightly larger title
+        font-weight: 700;
+        color: $color-text-light;
+        letter-spacing: -0.5px;
+        margin: 0;
+        line-height: 1.1;
+      }
+
+      .app-subtitle {
+        font-size: 17px; // Slightly larger subtitle
+        font-weight: 500;
+        color: $color-text-light-subtle;
+        letter-spacing: 0.5px;
+        margin: 0;
+        line-height: 1.1;
+      }
+    }
+  }
+}
+
+// ==========================================
+// CENTER SECTION - SEARCH
+// ==========================================
+
+.header-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  max-width: 600px;
+  margin: 0 $spacing-xl;
+  height: 100%;
+  align-items: center;
+
+  .search-container {
+    width: 100%;
+    max-width: 480px;
+    height: 56px; // Adjusted search height
+
+    .search-field {
+      width: 100%;
+      height: 56px; // Adjusted search height
+
+      ::ng-deep {
+        .mat-mdc-form-field {
+          width: 100%;
+          height: 56px; // Adjusted search height
+
+          .mat-mdc-text-field-wrapper {
+            background-color: rgba(255, 255, 255, 0.12);
+            border-radius: 28px; // Half of 56px for pill shape
+            backdrop-filter: blur(10px);
+            height: 56px;
+            padding: 0 $spacing-md;
+
+            .mat-mdc-form-field-outline {
+              border-color: rgba(255, 255, 255, 0.2);
+            }
+
+            &:hover .mat-mdc-form-field-outline {
+              border-color: rgba(255, 255, 255, 0.4);
+            }
+
+            .mat-mdc-form-field-infix {
+              padding: 16px 0; // Adjusted padding for vertical centering
+              border-top: none;
+              min-height: auto;
+            }
+          }
+
+          .mat-mdc-form-field-input-control input {
+            color: $color-text-light;
+            font-size: 16px; // Slightly larger font
+            height: 24px;
+            line-height: 24px;
+
+            &::placeholder {
+              color: $color-text-placeholder;
+            }
+          }
+
+          .mat-mdc-form-field-icon-prefix,
+          .mat-mdc-form-field-icon-suffix {
+            .mat-icon {
+              color: rgba(255, 255, 255, 0.7);
+              @include icon-size(24px); // Slightly larger icon
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 1024px) {
+    display: none; // Hide search on smaller screens
+  }
+}
+
+// ==========================================
+// RIGHT SECTION - ACTIONS & USER
+// ==========================================
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: $spacing-lg;
+  flex-shrink: 0;
+  min-width: 350px;
+  justify-content: flex-end;
+  height: 100%;
+
+  .quick-actions {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    height: 100%;
+
+    .action-button {
+      color: rgba(255, 255, 255, 0.8);
+      transition: $transition-ease;
+      border-radius: $radius-md;
+      @include button-square(56px); // Slightly larger button
+      height: 56px !important;
+      position: relative; // For badge positioning
+
+      &:hover {
+        background-color: $bg-light-hover;
+        color: $color-text-light;
+        transform: scale(1.05);
+      }
+
+      &.notification-btn:hover {
+        animation: bell-shake 0.5s ease-in-out;
+      }
+
+      mat-icon {
+        @include icon-size(26px); // Slightly larger icon
+      }
+
+      ::ng-deep .mat-badge-content {
+        top: 6px;
+        right: 6px;
+        font-size: 11px;
+        font-weight: 700;
+        min-width: 18px;
+        height: 18px;
+        line-height: 18px;
+      }
+    }
+
+    .divider {
+      width: 1px;
+      height: 36px; // Slightly taller divider
+      background: rgba(255, 255, 255, 0.2);
+      margin: 0 $spacing-sm;
+    }
+  }
+
+  .user-section {
+    height: 100%;
+    display: flex;
+    align-items: center;
+
+    .user-button {
+      display: flex;
+      align-items: center;
+      gap: $spacing-md;
+      color: $color-text-light;
+      padding: 10px $spacing-md;
+      border-radius: 38px; // Half of 76px for pill shape
+      transition: $transition-ease;
+      min-height: 76px; // Adjusted height
+      height: 76px; // Adjusted height
+
+      &:hover {
+        background-color: $bg-light-hover;
+        transform: translateY(-1px);
+      }
+
+      &.mat-mdc-button {
+        height: 76px !important; // Reconfirm for Material
+        min-height: 76px !important; // Reconfirm for Material
+        padding: 10px $spacing-md !important;
+        border-radius: 38px !important; // Reconfirm for Material
+      }
+
+      .user-avatar {
+        flex-shrink: 0;
+
+        .avatar-image {
+          @include avatar-base(56px, rgba(255, 255, 255, 0.3)); // Slightly larger avatar
+        }
+
+        .avatar-placeholder {
+          @include placeholder-style(56px); // Slightly larger placeholder
+          font-size: 22px; // Adjusted font size for initials
+          border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+      }
+
+      .user-info {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: $spacing-xs;
+        flex: 1;
+        min-width: 0;
+
+        .user-name {
+          font-size: 17px; // Slightly larger font
+          font-weight: 600;
+          line-height: 1.2;
+          color: $color-text-light;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 120px;
+        }
+
+        .user-role {
+          font-size: 14px; // Slightly larger font
+          opacity: 0.8;
+          line-height: 1.2;
+          color: $color-text-light-subtle;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 120px;
+        }
+
+        @media (max-width: 768px) {
+          display: none;
+        }
+      }
+
+      .dropdown-arrow {
+        @include icon-size(24px); // Slightly larger icon
+        opacity: 0.7;
+        transition: transform 0.3s ease;
+        margin-left: auto;
+        flex-shrink: 0;
+      }
+
+      &[aria-expanded="true"] .dropdown-arrow {
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  .auth-section {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    height: 100%;
+
+    .register-button {
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 500;
+      padding: 0 28px;
+      height: 52px; // Adjusted button height
+      border-radius: $radius-md;
+      transition: $transition-ease;
+      font-size: 16px; // Slightly larger font
+
+      &:hover {
+        background-color: $bg-light-hover;
+        color: $color-text-light;
+      }
+    }
+
+    .login-button {
+      background: linear-gradient(135deg, $color-primary, $color-primary-dark);
+      color: $color-text-light;
+      font-weight: 600;
+      padding: 0 32px;
+      height: 52px; // Adjusted button height
+      border-radius: $radius-md;
+      box-shadow: $shadow-primary-sm;
+      transition: $transition-ease;
+      font-size: 16px; // Slightly larger font
+
+      &:hover {
+        background: linear-gradient(135deg, darken($color-primary, 5%), darken($color-primary-dark, 5%));
+        transform: translateY(-1px);
+        box-shadow: $shadow-primary-md;
+      }
+
+      mat-icon {
+        margin-right: $spacing-sm;
+        @include icon-size(22px); // Slightly larger icon
+      }
+    }
+  }
+}
+
+// ==========================================
+// NOTIFICATION MENU STYLES (NO CHANGES NEEDED FOR HEIGHT)
+// ==========================================
+
+.notification-menu {
+  min-width: 400px;
+  max-width: 420px;
+  margin-top: $spacing-sm;
+
+  ::ng-deep .mat-mdc-menu-panel {
+    border-radius: $radius-lg !important;
+    box-shadow: $shadow-lg !important;
+    overflow: hidden;
+    background: $color-text-light;
+    border: 1px solid $color-border-dark;
+  }
+
+  .menu-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: $spacing-md $spacing-lg !important;
+    background: $bg-light-faint !important;
+    border-bottom: 1px solid $color-border-dark !important;
+    cursor: default !important;
+    height: auto !important;
+
+    &.mat-mdc-menu-item {
+      height: auto !important;
+      line-height: normal !important;
+      &:hover,
+      &:focus {
+        background: $bg-light-faint !important;
+      }
+      &[disabled] {
+        opacity: 1 !important;
+        color: inherit !important;
+      }
+    }
+
+    h4 {
+      margin: 0 !important;
+      font-size: 16px !important;
+      font-weight: 600 !important;
+      color: $color-text-dark !important;
+    }
+
+    .mark-all-read {
+      color: $color-text-muted !important;
+      @include button-square(36px);
+      border-radius: $radius-sm !important;
+
+      &:hover {
+        background-color: $bg-dark-active !important;
+        color: $color-text-dark !important;
+      }
+    }
+  }
+
+  .notification-list {
+    max-height: 320px;
+    overflow-y: auto;
+
+    .notification-item {
+      height: auto !important;
+      padding: $spacing-md $spacing-lg !important;
+      border-left: 3px solid transparent !important;
+      transition: $transition-ease !important;
+      display: flex !important;
+      align-items: flex-start !important;
+      gap: $spacing-md !important;
+      cursor: pointer !important;
+
+      &.unread {
+        background-color: #f0f9ff !important;
+        border-left-color: $color-primary !important;
+      }
+
+      &:hover {
+        background-color: $bg-dark-hover !important;
+        transform: translateX(4px) !important;
+      }
+
+      .notification-icon {
+        flex-shrink: 0 !important;
+        width: 40px !important;
+        height: 40px !important;
+        border-radius: 50% !important;
+        background: $bg-dark-active !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        margin-top: $spacing-xs !important;
+
+        mat-icon {
+          @include icon-size(18px);
+          color: $color-text-muted !important;
+        }
+      }
+
+      .notification-content {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 6px !important;
+        flex: 1 !important;
+
+        .notification-title {
+          font-size: 14px !important;
+          font-weight: 600 !important;
+          color: $color-text-dark !important;
+          line-height: 1.4 !important;
+          margin: 0 !important;
+        }
+
+        .notification-text {
+          font-size: 13px !important;
+          color: $color-text-muted !important;
+          line-height: 1.4 !important;
+          margin: 0 !important;
+        }
+
+        .notification-time {
+          font-size: 12px !important;
+          color: #94a3b8 !important;
+          margin: 0 !important;
+        }
+      }
+
+      &.mat-mdc-menu-item {
+        height: auto !important;
+        line-height: normal !important;
+      }
+    }
+  }
+
+  .view-all-notifications {
+    justify-content: center !important;
+    color: $color-primary !important;
+    font-weight: 500 !important;
+    padding: $spacing-md !important;
+    height: 56px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: $spacing-sm !important;
+
+    &:hover {
+      background-color: #f0f9ff !important;
+    }
+
+    mat-icon {
+      @include icon-size(18px);
+    }
+  }
+}
+
+// ==========================================
+// USER DROPDOWN STYLES (NO CHANGES NEEDED FOR HEIGHT)
+// ==========================================
+
+.user-dropdown {
+  min-width: 340px;
+  margin-top: $spacing-sm;
+
+  ::ng-deep .mat-mdc-menu-panel {
+    border-radius: $radius-lg !important;
+    // box-shadow: $shadow-lg !important;
+    max-height: calc(100vh - 120px);
+    overflow: hidden;
+    background: $color-text-light;
+    border: 1px solid $color-border-dark;
+  }
+
+  .user-menu-header {
+    padding: $spacing-lg !important;
+    background: linear-gradient(135deg, $bg-light-faint 0%, $bg-dark-active 100%) !important;
+    display: flex !important;
+    gap: $spacing-md !important;
+    align-items: center !important;
+    border-bottom: 1px solid $color-border-dark !important;
+    cursor: default !important;
+    pointer-events: none !important;
+    height: auto !important;
+
+    &.mat-mdc-menu-item {
+      height: auto !important;
+      line-height: normal !important;
+
+      &:hover,
+      &:focus {
+        background: linear-gradient(135deg, $bg-light-faint 0%, $bg-dark-active 100%) !important;
+      }
+      &[disabled] {
+        opacity: 1 !important;
+        color: inherit !important;
+      }
+    }
+
+    .user-avatar-large {
+      flex-shrink: 0;
+
+      .avatar-image-large {
+        @include avatar-base(64px, $color-text-light);
+        box-shadow: $shadow-sm;
+      }
+
+      .avatar-placeholder-large {
+        @include placeholder-style(64px);
+        font-size: 24px;
+        border: 3px solid $color-text-light;
+        box-shadow: $shadow-sm;
+      }
+    }
+
+    .user-details {
+      flex: 1;
+      pointer-events: none;
+
+      h4 {
+        margin: 0 0 6px 0 !important;
+        font-size: 18px !important;
+        font-weight: 700 !important;
+        color: $color-text-dark !important;
+        line-height: 1.3 !important;
+      }
+
+      p {
+        margin: 0 0 10px 0 !important;
+        font-size: 14px !important;
+        color: $color-text-muted !important;
+        line-height: 1.3 !important;
+      }
+
+      .user-status {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        font-size: 11px !important;
+        font-weight: 600 !important;
+        padding: 6px 12px !important;
+        border-radius: $radius-pill !important;
+        background-color: lighten($color-success, 35%) !important;
+        color: darken($color-success, 20%) !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+
+        &::before {
+          content: '';
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background-color: $color-success;
+        }
+      }
+    }
+  }
+
+  .menu-action-item {
+    height: 52px !important;
+    padding: 0 $spacing-lg !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: $spacing-md !important;
+    transition: $transition-fast !important;
+    border-radius: 0 !important;
+    color: #374151 !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    position: relative !important;
+    cursor: pointer !important;
+
+    &:hover {
+      background-color: $bg-light-faint !important;
+      color: $color-text-dark !important;
+      transform: translateX(4px) !important;
+
+      .chevron-icon {
+        opacity: 1 !important;
+        transform: translateX(4px) !important;
+      }
+
+      mat-icon:first-child {
+        color: $color-primary !important;
+        transform: scale(1.1) !important;
+      }
+    }
+
+    &:active {
+      background-color: $bg-dark-active !important;
+      transform: translateX(2px) !important;
+    }
+
+    mat-icon:first-child {
+      color: $color-text-muted !important;
+      @include icon-size(20px);
+      transition: $transition-fast !important;
+      flex-shrink: 0 !important;
+    }
+
+    span {
+      flex: 1 !important;
+      font-size: 14px !important;
+      font-weight: 500 !important;
+      color: inherit !important;
+    }
+
+    .chevron-icon {
+      @include icon-size(16px);
+      color: #94a3b8 !important;
+      opacity: 0 !important;
+      transition: $transition-fast !important;
+      margin-left: auto !important;
+      flex-shrink: 0 !important;
+      
+    }
+
+    &.mat-mdc-menu-item {
+      height: 52px !important;
+      line-height: normal !important;
+
+      .mat-mdc-menu-item-text {
+        display: flex !important;
+        align-items: center !important;
+        gap: $spacing-md !important;
+        width: 100% !important;
+      }
+    }
+  }
+
+  .logout-item {
+    height: 52px !important;
+    padding: 0 $spacing-lg !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: $spacing-md !important;
+    transition: $transition-fast !important;
+    border-radius: 0 !important;
+    color: #dc2626 !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    border-top: 1px solid $color-border-dark !important;
+    margin-top: $spacing-sm !important;
+    cursor: pointer !important;
+
+    &:hover {
+      background-color: #fef2f2 !important;
+      color: #b91c1c !important;
+      transform: translateX(4px) !important;
+
+      mat-icon {
+        color: #b91c1c !important;
+        transform: scale(1.1) !important;
+      }
+    }
+
+    &:active {
+      background-color: #fee2e2 !important;
+      transform: translateX(2px) !important;
+    }
+
+    mat-icon {
+      color: #dc2626 !important;
+      @include icon-size(20px);
+      transition: $transition-fast !important;
+      flex-shrink: 0 !important;
+    }
+
+    span {
+      flex: 1 !important;
+      font-size: 14px !important;
+      font-weight: 600 !important;
+      color: inherit !important;
+    }
+
+    &.mat-mdc-menu-item {
+      height: 52px !important;
+      line-height: normal !important;
+
+      .mat-mdc-menu-item-text {
+        display: flex !important;
+        align-items: center !important;
+        gap: $spacing-md !important;
+        width: 100% !important;
+      }
+    }
+  }
+
+  ::ng-deep .mat-mdc-menu-item + mat-divider,
+  ::ng-deep mat-divider {
+    margin: $spacing-sm 0 !important;
+    border-top-color: $color-border-dark !important;
+    opacity: 1 !important;
+  }
+}
+
+// ==========================================
+// ANIMATIONS
+// ==========================================
+
+@keyframes bell-shake {
+  0%, 50%, 100% { transform: rotate(0deg); }
+  10%, 30% { transform: rotate(-10deg); }
+  20%, 40% { transform: rotate(10deg); }
+}
+
+// ==========================================
+// RESPONSIVE DESIGN
+// ==========================================
+
+@media (max-width: 1200px) {
+  .app-header {
+    padding: 0 32px !important;
+    height: 88px !important; // Adjusted height for this breakpoint
+
+    &.mat-toolbar,
+    &.mat-toolbar.mat-toolbar-row,
+    &.mat-toolbar.mat-toolbar-single-row {
+      padding: 0 32px !important;
+      height: 88px !important;
+      min-height: 88px !important;
+    }
+  }
+
+  .header-left {
+    min-width: 280px;
+    gap: $spacing-md;
+
+    .menu-button {
+      @include button-square(52px);
+      mat-icon { @include icon-size(26px); }
+    }
+
+    .app-branding {
+      .logo-container .logo-placeholder {
+        @include placeholder-style(52px);
+        .logo-icon { @include icon-size(30px); }
+      }
+      .brand-text {
+        .app-title { font-size: 22px !important; }
+        .app-subtitle { font-size: 16px !important; }
+      }
+    }
+  }
+
+  .header-center {
+    .search-container {
+      height: 52px;
+      .search-field {
+        height: 52px;
+        ::ng-deep {
+          .mat-mdc-form-field {
+            height: 52px;
+            .mat-mdc-text-field-wrapper {
+              height: 52px;
+              border-radius: 26px;
+              .mat-mdc-form-field-infix { padding: 14px 0; }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .header-right {
+    min-width: 280px;
+    gap: $spacing-md;
+
+    .quick-actions {
+      .action-button {
+        @include button-square(52px);
+        mat-icon { @include icon-size(24px); }
+      }
+      .divider { height: 32px; }
+    }
+
+    .user-section .user-button {
+      min-height: 68px !important;
+      height: 68px !important;
+      border-radius: 34px !important;
+      .user-avatar {
+        .avatar-image, .avatar-placeholder {
+          @include avatar-base(52px, rgba(255, 255, 255, 0.3));
+          font-size: 20px;
+        }
+      }
+      .user-info {
+        .user-name { font-size: 16px !important; }
+        .user-role { font-size: 13px !important; }
+      }
+      .dropdown-arrow { @include icon-size(22px); }
+    }
+
+    .auth-section {
+      .register-button, .login-button {
+        height: 48px;
+        font-size: 15px;
+      }
+      .login-button mat-icon { @include icon-size(20px); }
+    }
+  }
+}
+
+
+@media (max-width: 1024px) {
+  .app-header {
+    padding: 0 $spacing-lg !important;
+    height: 76px !important; // Adjusted height for this breakpoint
+
+    &.mat-toolbar,
+    &.mat-toolbar.mat-toolbar-row,
+    &.mat-toolbar.mat-toolbar-single-row {
+      min-height: 76px !important;
+      height: 76px !important;
+      padding: 0 $spacing-lg !important;
+    }
+  }
+
+  .header-left {
+    gap: $spacing-md;
+
+    .menu-button {
+      @include button-square(48px);
+      mat-icon {
+        @include icon-size(24px);
+      }
+    }
+
+    .app-branding {
+      gap: $spacing-md;
+
+      .logo-container .logo-placeholder {
+        @include placeholder-style(48px);
+        .logo-icon {
+          @include icon-size(28px);
+        }
+      }
+
+      .brand-text {
+        .app-title {
+          font-size: 20px !important;
+        }
+
+        .app-subtitle {
+          font-size: 15px !important;
+        }
+      }
+    }
+  }
+
+  .header-right {
+    gap: $spacing-md;
+
+    .quick-actions {
+      gap: $spacing-sm;
+
+      .action-button {
+        @include button-square(48px);
+        mat-icon {
+          @include icon-size(22px);
+        }
+      }
+    }
+
+    .user-section .user-button {
+      min-height: 60px !important;
+      height: 60px !important;
+      padding: 8px $spacing-md !important;
+      border-radius: 30px !important;
+
+      .user-avatar {
+        .avatar-image,
+        .avatar-placeholder {
+          @include avatar-base(48px, rgba(255, 255, 255, 0.3));
+          font-size: 18px;
+        }
+      }
+    }
+
+    .auth-section {
+      gap: $spacing-sm;
+
+      .register-button,
+      .login-button {
+        height: 44px;
+        font-size: 14px;
+        padding: 0 24px;
+      }
+
+      .login-button mat-icon {
+        @include icon-size(18px);
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .app-header {
+    padding: 0 $spacing-md !important;
+    height: 68px !important; // Adjusted height for this breakpoint
+
+    &.mat-toolbar,
+    &.mat-toolbar.mat-toolbar-row,
+    &.mat-toolbar.mat-toolbar-single-row {
+      min-height: 68px !important;
+      height: 68px !important;
+      padding: 0 $spacing-md !important;
+    }
+  }
+
+  .header-left {
+    min-width: unset;
+    gap: $spacing-sm;
+
+    .menu-button {
+      @include button-square(44px); // Slightly smaller button
+      mat-icon { @include icon-size(22px); } // Adjusted icon size
+    }
+
+    .app-branding {
+      gap: $spacing-sm;
+
+      .logo-container {
+        .app-logo { height: 44px; } // Adjusted logo height
+        .logo-placeholder {
+          @include placeholder-style(44px); // Adjusted placeholder size
+          .logo-icon { @include icon-size(26px); } // Adjusted icon size
+        }
+      }
+
+      .brand-text {
+        .app-title {
+          font-size: 17px !important; // Slightly smaller title
+        }
+
+        .app-subtitle {
+          display: none;
+        }
+      }
+    }
+  }
+
+  .header-right {
+    min-width: unset;
+    gap: $spacing-sm;
+
+    .quick-actions {
+      display: none;
+    }
+
+    .user-section .user-button {
+      min-width: unset;
+      padding: 8px $spacing-sm !important;
+
+      .user-avatar {
+        .avatar-image,
+        .avatar-placeholder {
+          @include avatar-base(44px, rgba(255, 255, 255, 0.3)); // Adjusted avatar size
+          font-size: 17px; // Adjusted font size for initials
+        }
+      }
+
+      .user-info {
+        display: none;
+      }
+    }
+
+    .auth-section {
+      .register-button {
+        display: none;
+      }
+
+      .login-button {
+        padding: 0 20px;
+        height: 40px; // Adjusted button height
+        font-size: 13px;
+
+        mat-icon {
+          margin-right: $spacing-xs;
+        }
+      }
+    }
+  }
+}

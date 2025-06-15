@@ -1,0 +1,332 @@
+<div class="trainer-list-container">
+  <!-- Header Section -->
+  <div class="page-header">
+    <div class="header-content">
+      <div class="title-section">
+        <h1>
+          <mat-icon>school</mat-icon>
+          Trainers Management
+        </h1>
+        <p>Manage trainer profiles, assignments, and performance</p>
+      </div>
+      
+      <div class="header-actions">
+        <button mat-raised-button color="primary" (click)="createTrainer()">
+          <mat-icon>person_add</mat-icon>
+          Add Trainer
+        </button>
+        
+        <button mat-stroked-button (click)="exportTrainers()">
+          <mat-icon>download</mat-icon>
+          Export
+        </button>
+        
+        <button mat-icon-button (click)="refreshData()" matTooltip="Refresh">
+          <mat-icon>refresh</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters Section -->
+  <mat-card class="filters-card">
+    <mat-card-content>
+      <div class="filters-container">
+        <!-- Search -->
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Search trainers</mat-label>
+          <input matInput 
+                 [(ngModel)]="searchTerm" 
+                 (input)="applyFilter()"
+                 placeholder="Name, email...">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        <!-- Department Filter -->
+        <mat-form-field appearance="outline">
+          <mat-label>Department</mat-label>
+          <mat-select [(value)]="departmentFilter" (selectionChange)="applyFilter()">
+            <mat-option value="">All Departments</mat-option>
+            <mat-option *ngFor="let dept of departments" [value]="dept">
+              {{ dept }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Specialization Filter -->
+        <mat-form-field appearance="outline">
+          <mat-label>Specialization</mat-label>
+          <mat-select [(value)]="specializationFilter" (selectionChange)="applyFilter()">
+            <mat-option value="">All Specializations</mat-option>
+            <mat-option *ngFor="let spec of specializations" [value]="spec">
+              {{ spec }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Status Filter -->
+        <mat-form-field appearance="outline">
+          <mat-label>Status</mat-label>
+          <mat-select [(value)]="statusFilter" (selectionChange)="applyFilter()">
+            <mat-option value="">All Status</mat-option>
+            <mat-option value="active">Active</mat-option>
+            <mat-option value="inactive">Inactive</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Clear Filters -->
+        <button mat-stroked-button (click)="clearFilters()" class="clear-filters-btn">
+          <mat-icon>clear</mat-icon>
+          Clear Filters
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Stats Cards -->
+  <div class="stats-grid">
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-info">
+            <h3>{{ totalCount }}</h3>
+            <p>Total Trainers</p>
+          </div>
+          <mat-icon>group</mat-icon>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-info">
+            <h3>{{ (dataSource.data).length }}</h3>
+            <p>Active Trainers</p>
+          </div>
+          <mat-icon color="primary">check_circle</mat-icon>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-info">
+            <h3>{{ departments.length }}</h3>
+            <p>Departments</p>
+          </div>
+          <mat-icon color="accent">business</mat-icon>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-info">
+            <h3>{{ specializations.length }}</h3>
+            <p>Specializations</p>
+          </div>
+          <mat-icon color="warn">star</mat-icon>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Trainers Table -->
+  <mat-card class="table-card">
+    <mat-card-header>
+      <mat-card-title>Trainers List</mat-card-title>
+      <mat-card-subtitle>{{ dataSource.filteredData.length }} of {{ totalCount }} trainers</mat-card-subtitle>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <!-- Loading Spinner -->
+      <div *ngIf="loading" class="loading-container">
+        <mat-spinner diameter="50"></mat-spinner>
+        <p>Loading trainers...</p>
+      </div>
+
+      <!-- Table -->
+      <div *ngIf="!loading" class="table-container">
+        <table mat-table [dataSource]="dataSource" matSort class="trainers-table">
+          
+          <!-- Avatar Column -->
+          <ng-container matColumnDef="avatar">
+            <th mat-header-cell *matHeaderCellDef>Photo</th>
+            <td mat-cell *matCellDef="let trainer">
+              <div class="trainer-avatar">
+                <div class="avatar-placeholder">
+                  {{ getInitials(trainer) }}
+                </div>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+            <td mat-cell *matCellDef="let trainer">
+              <div class="trainer-info">
+                <div class="name">{{ getFullName(trainer) }}</div>
+                <div class="email">{{ trainer.email }}</div>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Email Column -->
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Contact</th>
+            <td mat-cell *matCellDef="let trainer">
+              <div class="contact-info">
+                <div>{{ trainer.email }}</div>
+                <div class="phone" *ngIf="trainer.phoneNumber">{{ trainer.phoneNumber }}</div>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Specialization Column -->
+          <ng-container matColumnDef="specialization">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Specialization</th>
+            <td mat-cell *matCellDef="let trainer">
+              <mat-chip-set *ngIf="trainer.specialization">
+                <mat-chip>{{ trainer.specialization }}</mat-chip>
+              </mat-chip-set>
+              <span *ngIf="!trainer.specialization" class="no-data">Not specified</span>
+            </td>
+          </ng-container>
+
+          <!-- Department Column -->
+          <ng-container matColumnDef="department">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Department</th>
+            <td mat-cell *matCellDef="let trainer">
+              {{ trainer.department || 'Not assigned' }}
+            </td>
+          </ng-container>
+
+          <!-- Experience Column -->
+          <ng-container matColumnDef="experienceYears">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Experience</th>
+            <td mat-cell *matCellDef="let trainer">
+              <div class="experience">
+                {{ trainer.experienceYears || 0 }} years
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Assigned Courses Column -->
+          <ng-container matColumnDef="assignedCourses">
+            <th mat-header-cell *matHeaderCellDef>Courses</th>
+            <td mat-cell *matCellDef="let trainer">
+              <button mat-stroked-button 
+                      size="small"
+                      (click)="viewAssignedCourses(trainer)"
+                      [disabled]="!trainer.assignedCourses?.length">
+                <mat-icon>book</mat-icon>
+                {{ trainer.assignedCourses?.length || 0 }}
+              </button>
+            </td>
+          </ng-container>
+
+          <!-- Assigned Trainees Column -->
+          <ng-container matColumnDef="assignedTrainees">
+            <th mat-header-cell *matHeaderCellDef>Trainees</th>
+            <td mat-cell *matCellDef="let trainer">
+              <button mat-stroked-button 
+                      size="small"
+                      (click)="viewAssignedTrainees(trainer)"
+                      [disabled]="!trainer.assignedTrainees">
+                <mat-icon>people</mat-icon>
+                {{ trainer.assignedTrainees || 0 }}
+              </button>
+            </td>
+          </ng-container>
+
+          <!-- Status Column -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+            <td mat-cell *matCellDef="let trainer">
+              <mat-chip [color]="getStatusColor(trainer)" selected>
+                <mat-icon matChipAvatar>
+                  {{ trainer.isActive ? 'check_circle' : 'cancel' }}
+                </mat-icon>
+                {{ getStatusText(trainer) }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Last Login Column -->
+          <ng-container matColumnDef="lastLogin">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Last Login</th>
+            <td mat-cell *matCellDef="let trainer">
+              <div class="last-login">
+                {{ formatDate(trainer.lastLogin) }}
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let trainer">
+              <div class="actions-container">
+                <button mat-icon-button 
+                        (click)="viewTrainer(trainer)"
+                        matTooltip="View Details">
+                  <mat-icon>visibility</mat-icon>
+                </button>
+                
+                <button mat-icon-button 
+                        (click)="editTrainer(trainer)"
+                        matTooltip="Edit Trainer">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                
+                <button mat-icon-button 
+                        (click)="assignCourse(trainer)"
+                        matTooltip="Assign Course">
+                  <mat-icon>assignment</mat-icon>
+                </button>
+                
+                <button mat-icon-button 
+                        [color]="trainer.isActive ? 'warn' : 'primary'"
+                        (click)="toggleTrainerStatus(trainer)"
+                        [matTooltip]="trainer.isActive ? 'Deactivate' : 'Activate'">
+                  <mat-icon>{{ trainer.isActive ? 'pause_circle' : 'play_circle' }}</mat-icon>
+                </button>
+
+                <button mat-icon-button 
+                        color="warn"
+                        (click)="deleteTrainer(trainer)"
+                        matTooltip="Delete Trainer">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Table Rows -->
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <!-- No Data Message -->
+        <div *ngIf="!dataSource.filteredData.length" class="no-data-container">
+          <mat-icon>person_off</mat-icon>
+          <h3>No trainers found</h3>
+          <p>No trainers match your current filters.</p>
+          <button mat-raised-button color="primary" (click)="clearFilters()">
+            Clear Filters
+          </button>
+        </div>
+      </div>
+
+      <!-- Paginator -->
+      <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]"
+                     [pageSize]="25"
+                     showFirstLastButtons>
+      </mat-paginator>
+    </mat-card-content>
+  </mat-card>
+</div>

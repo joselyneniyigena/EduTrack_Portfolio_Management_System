@@ -1,0 +1,174 @@
+<!-- src/app/features/role-management/role-form/role-form.component.html -->
+<div class="role-form-container">
+    <!-- Header Section -->
+    <div class="page-header">
+        <div class="header-content">
+            <div class="title-section">
+                <h1 class="page-title">
+                    <mat-icon>{{ isEditMode ? 'edit' : 'add' }}</mat-icon>
+                    {{ isEditMode ? 'Edit Role' : 'Create New Role' }}
+                </h1>
+                <p class="page-subtitle">
+                    {{ isEditMode ? 'Update role information' : 'Define a new system role' }}
+                </p>
+            </div>
+            <div class="header-actions">
+                <button mat-stroked-button (click)="onCancel()" class="cancel-button">
+                    <mat-icon>arrow_back</mat-icon>
+                    Back to Roles
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb">
+        <ol>
+            <li><a routerLink="/roles">Roles</a></li>
+            <li class="current">{{ isEditMode ? 'Edit' : 'Create' }}</li>
+        </ol>
+    </nav>
+
+    <!-- Main Form Card -->
+    <mat-card class="form-card">
+        <mat-card-header class="card-header">
+            <mat-card-title>
+                <div class="card-title-content">
+                    <mat-icon>security</mat-icon>
+                    <span>Role Information</span>
+                </div>
+            </mat-card-title>
+            <mat-card-subtitle>
+                Fill in the details below to {{ isEditMode ? 'update' : 'create' }} the role
+            </mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+            <!-- Loading State -->
+            <div *ngIf="loading" class="loading-container">
+                <mat-spinner diameter="40"></mat-spinner>
+                <p>{{ isEditMode ? 'Loading role data...' : 'Processing...' }}</p>
+            </div>
+
+            <!-- Form -->
+            <form [formGroup]="roleForm" (ngSubmit)="onSubmit()" *ngIf="!loading" class="role-form">
+
+                <!-- Role Name Field -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <mat-icon>code</mat-icon>
+                        System Identifier
+                    </h3>
+                    <p class="section-description">
+                        The internal system name for this role (uppercase letters and underscores only)
+                    </p>
+
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Role Name (System)</mat-label>
+                        <input matInput formControlName="roleName" placeholder="e.g., ADMIN, TRAINER, STUDENT"
+                            [class.error]="roleForm.get('roleName')?.invalid && roleForm.get('roleName')?.touched">
+                        <mat-icon matSuffix>code</mat-icon>
+                        <mat-hint>Use uppercase letters and underscores only (A-Z, _)</mat-hint>
+                        <mat-error *ngIf="roleForm.get('roleName')?.invalid && roleForm.get('roleName')?.touched">
+                            {{ getErrorMessage('roleName') }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Display Name Field -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <mat-icon>label</mat-icon>
+                        Display Information
+                    </h3>
+                    <p class="section-description">
+                        The user-friendly name that will be displayed in the interface
+                    </p>
+
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Display Name</mat-label>
+                        <input matInput formControlName="name" (input)="onNameChange()"
+                            placeholder="e.g., Administrator, Trainer, Student"
+                            [class.error]="roleForm.get('name')?.invalid && roleForm.get('name')?.touched">
+                        <mat-icon matSuffix>label</mat-icon>
+                        <mat-hint>This name will be visible to users in the system</mat-hint>
+                        <mat-error *ngIf="roleForm.get('name')?.invalid && roleForm.get('name')?.touched">
+                            {{ getErrorMessage('name') }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Preview Section -->
+                <div class="form-section" *ngIf="roleForm.get('name')?.value || roleForm.get('roleName')?.value">
+                    <h3 class="section-title">
+                        <mat-icon>preview</mat-icon>
+                        Preview
+                    </h3>
+                    <div class="preview-container">
+                        <div class="preview-item">
+                            <span class="preview-label">System Name:</span>
+                            <mat-chip color="primary" selected>
+                                {{ roleForm.get('roleName')?.value || 'ROLE_NAME' }}
+                            </mat-chip>
+                        </div>
+                        <div class="preview-item">
+                            <span class="preview-label">Display Name:</span>
+                            <mat-chip color="accent" selected>
+                                {{ roleForm.get('name')?.value || 'Display Name' }}
+                            </mat-chip>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <button type="button" mat-stroked-button (click)="onCancel()" class="cancel-action">
+                        <mat-icon>cancel</mat-icon>
+                        Cancel
+                    </button>
+
+                    <button type="submit" mat-raised-button color="primary" [disabled]="roleForm.invalid || loading"
+                        class="submit-action">
+                        <mat-icon>{{ isEditMode ? 'save' : 'add' }}</mat-icon>
+                        {{ isEditMode ? 'Update Role' : 'Create Role' }}
+                    </button>
+                </div>
+            </form>
+        </mat-card-content>
+    </mat-card>
+
+    <!-- Help Card -->
+    <mat-card class="help-card">
+        <mat-card-header>
+            <mat-card-title>
+                <mat-icon>help</mat-icon>
+                Role Guidelines
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="help-content">
+                <div class="help-item">
+                    <mat-icon>check_circle</mat-icon>
+                    <div>
+                        <strong>Role Names</strong>
+                        <p>Use descriptive, uppercase names like ADMIN, TRAINER, or STUDENT</p>
+                    </div>
+                </div>
+                <div class="help-item">
+                    <mat-icon>check_circle</mat-icon>
+                    <div>
+                        <strong>Display Names</strong>
+                        <p>Use user-friendly names that clearly describe the role's purpose</p>
+                    </div>
+                </div>
+                <div class="help-item">
+                    <mat-icon>check_circle</mat-icon>
+                    <div>
+                        <strong>Conventions</strong>
+                        <p>Follow consistent naming patterns across your organization</p>
+                    </div>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>

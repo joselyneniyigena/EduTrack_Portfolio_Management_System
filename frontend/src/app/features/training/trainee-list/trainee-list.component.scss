@@ -1,0 +1,451 @@
+.trainee-list-container {
+  padding: 24px;
+  background-color: #f5f5f5;
+  min-height: calc(100vh - 96px);
+
+  .page-header {
+    margin-bottom: 24px;
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+
+      .title-section {
+        h1 {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          margin: 0 0 8px 0;
+          color: #1976d2;
+          font-weight: 500;
+          font-size: 2rem;
+
+          mat-icon {
+            font-size: 2rem;
+            width: 2rem;
+            height: 2rem;
+          }
+        }
+
+        p {
+          margin: 0;
+          color: #666;
+          font-size: 1rem;
+        }
+      }
+
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+
+        button {
+          mat-icon {
+            margin-right: 8px;
+          }
+        }
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header-content {
+        flex-direction: column;
+        align-items: stretch;
+
+        .header-actions {
+          justify-content: stretch;
+
+          button {
+            flex: 1;
+          }
+        }
+      }
+    }
+  }
+
+  .filters-card {
+    margin-bottom: 24px;
+
+    .filters-container {
+      display: grid;
+      grid-template-columns: 2fr repeat(4, 1fr) auto;
+      gap: 16px;
+      align-items: center;
+
+      .search-field {
+        min-width: 300px;
+      }
+
+      .clear-filters-btn {
+        mat-icon {
+          margin-right: 8px;
+        }
+      }
+
+      @media (max-width: 1400px) {
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 12px;
+
+        .search-field {
+          grid-column: 1 / -1;
+          min-width: unset;
+        }
+
+        .clear-filters-btn {
+          grid-column: 1 / -1;
+          justify-self: start;
+        }
+      }
+
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+
+    .stat-card {
+      transition: transform 0.2s ease-in-out;
+
+      &:hover {
+        transform: translateY(-2px);
+      }
+
+      .stat-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .stat-info {
+          h3 {
+            margin: 0 0 8px 0;
+            font-size: 2rem;
+            font-weight: 600;
+            color: #1976d2;
+          }
+
+          p {
+            margin: 0;
+            color: #666;
+            font-size: 0.875rem;
+            font-weight: 500;
+          }
+        }
+
+        mat-icon {
+          font-size: 2.5rem;
+          width: 2.5rem;
+          height: 2.5rem;
+          opacity: 0.7;
+        }
+      }
+
+      &.active .stat-info h3 {
+        color: #1976d2;
+      }
+
+      &.graduated .stat-info h3 {
+        color: #ff6f00;
+      }
+
+      &.total .stat-info h3 {
+        color: #388e3c;
+      }
+
+      &.courses .stat-info h3 {
+        color: #7b1fa2;
+      }
+    }
+  }
+
+  .table-card {
+    .loading-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+
+      p {
+        margin-top: 16px;
+        color: #666;
+      }
+    }
+
+    .table-container {
+      overflow: auto;
+      max-height: 70vh;
+
+      .trainees-table {
+        width: 100%;
+        min-width: 1400px;
+
+        .trainee-avatar {
+          .avatar-placeholder {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1976d2, #1565c0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.875rem;
+          }
+        }
+
+        .trainee-info {
+          .name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+          }
+
+          .email {
+            font-size: 0.75rem;
+            color: #666;
+            margin-bottom: 2px;
+          }
+
+          .phone {
+            font-size: 0.75rem;
+            color: #888;
+          }
+        }
+
+        .contact-info {
+          .phone {
+            font-size: 0.75rem;
+            color: #666;
+            margin-top: 2px;
+          }
+        }
+
+        .enrollment-info {
+          .date {
+            font-weight: 500;
+            color: #333;
+          }
+
+          .graduation {
+            margin-top: 4px;
+            
+            small {
+              color: #4caf50;
+              font-weight: 500;
+            }
+          }
+        }
+
+        .trainer-info {
+          .trainer-name {
+            font-weight: 500;
+            color: #333;
+            font-size: 0.875rem;
+          }
+
+          .trainer-email {
+            font-size: 0.75rem;
+            color: #666;
+          }
+        }
+
+        .courses-info {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+
+          mat-chip-set {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+          }
+
+          mat-chip {
+            font-size: 0.75rem;
+            height: 24px;
+            line-height: 24px;
+          }
+        }
+
+        .gpa-info,
+        .attendance-info {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          mat-chip {
+            font-weight: 600;
+          }
+        }
+
+        .assessments-info {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+
+          .assessment-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+
+            .completed {
+              color: #4caf50;
+              font-size: 0.75rem;
+              font-weight: 500;
+            }
+
+            .pending {
+              color: #ff9800;
+              font-size: 0.75rem;
+              font-weight: 500;
+            }
+          }
+        }
+
+        .last-activity {
+          font-size: 0.875rem;
+          color: #666;
+        }
+
+        .no-data {
+          color: #999;
+          font-style: italic;
+          font-size: 0.875rem;
+        }
+
+        .actions-container {
+          display: flex;
+          gap: 4px;
+          flex-wrap: wrap;
+
+          button {
+            min-width: 36px;
+            height: 36px;
+
+            mat-icon {
+              font-size: 18px;
+              width: 18px;
+              height: 18px;
+            }
+          }
+        }
+
+        // Row styling based on status
+        .graduated-row {
+          background-color: rgba(76, 175, 80, 0.05);
+        }
+
+        .suspended-row {
+          background-color: rgba(255, 152, 0, 0.05);
+        }
+
+        .dropped-row {
+          background-color: rgba(244, 67, 54, 0.05);
+        }
+
+        // Responsive table on mobile
+        @media (max-width: 768px) {
+          min-width: unset;
+          
+          .mat-column-email,
+          .mat-column-enrollmentDate,
+          .mat-column-assignedTrainer,
+          .mat-column-gpa,
+          .mat-column-attendanceRate,
+          .mat-column-lastActivity {
+            display: none;
+          }
+
+          .actions-container {
+            flex-direction: column;
+            gap: 2px;
+          }
+        }
+
+        @media (max-width: 1024px) {
+          .mat-column-email,
+          .mat-column-lastActivity {
+            display: none;
+          }
+        }
+      }
+
+      .no-data-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 60px 20px;
+        text-align: center;
+
+        mat-icon {
+          font-size: 4rem;
+          width: 4rem;
+          height: 4rem;
+          color: #ccc;
+          margin-bottom: 16px;
+        }
+
+        h3 {
+          margin: 0 0 8px 0;
+          color: #666;
+        }
+
+        p {
+          margin: 0 0 24px 0;
+          color: #999;
+        }
+      }
+    }
+  }
+}
+
+// Menu styles
+::ng-deep .mat-mdc-menu-panel {
+  .delete-action {
+    color: #f44336 !important;
+
+    mat-icon {
+      color: #f44336 !important;
+    }
+  }
+}
+
+// Status chip colors
+::ng-deep .mat-mdc-chip {
+  &.mat-primary {
+    --mdc-chip-elevated-container-color: #e3f2fd;
+    --mdc-chip-label-text-color: #1976d2;
+  }
+
+  &.mat-accent {
+    --mdc-chip-elevated-container-color: #fff3e0;
+    --mdc-chip-label-text-color: #ff6f00;
+  }
+
+  &.mat-warn {
+    --mdc-chip-elevated-container-color: #ffebee;
+    --mdc-chip-label-text-color: #d32f2f;
+  }
+}
+
+// Snackbar styles
+.snackbar-success {
+  --mdc-snackbar-container-color: #4caf50;
+  --mdc-snackbar-supporting-text-color: white;
+}
+
+.snackbar-error {
+  --mdc-snackbar-container-color: #f44336;
+  --mdc-snackbar-supporting-text-color: white;
+}

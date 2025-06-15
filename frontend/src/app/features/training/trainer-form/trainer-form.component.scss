@@ -1,0 +1,366 @@
+.trainer-form-container {
+  padding: 24px;
+  background-color: #f5f5f5;
+  min-height: calc(100vh - 96px);
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .form-header {
+    margin-bottom: 24px;
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+
+      .title-section {
+        h1 {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          margin: 0 0 8px 0;
+          color: #1976d2;
+          font-weight: 500;
+          font-size: 2rem;
+
+          mat-icon {
+            font-size: 2rem;
+            width: 2rem;
+            height: 2rem;
+          }
+        }
+
+        p {
+          margin: 0;
+          color: #666;
+          font-size: 1rem;
+          max-width: 500px;
+        }
+      }
+
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-shrink: 0;
+
+        button {
+          mat-icon {
+            margin-right: 8px;
+          }
+
+          mat-spinner {
+            margin-right: 8px;
+          }
+        }
+      }
+
+      @media (max-width: 768px) {
+        flex-direction: column;
+        align-items: stretch;
+
+        .header-actions {
+          justify-content: stretch;
+
+          button {
+            flex: 1;
+          }
+        }
+      }
+    }
+  }
+
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    p {
+      margin-top: 16px;
+      color: #666;
+      font-size: 1rem;
+    }
+  }
+
+  .form-content {
+    .form-section {
+      margin-bottom: 24px;
+      transition: transform 0.2s ease-in-out;
+
+      &:hover {
+        transform: translateY(-2px);
+      }
+
+      mat-card-header {
+        margin-bottom: 16px;
+
+        mat-card-title {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          color: #1976d2;
+          font-size: 1.25rem;
+          font-weight: 500;
+
+          mat-icon {
+            font-size: 1.5rem;
+            width: 1.5rem;
+            height: 1.5rem;
+          }
+        }
+
+        mat-card-subtitle {
+          color: #666;
+          font-size: 0.875rem;
+          margin-top: 4px;
+        }
+      }
+
+      mat-card-content {
+        padding-top: 0;
+
+        .form-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          gap: 16px;
+          align-items: start;
+
+          .full-width {
+            grid-column: 1 / -1;
+          }
+
+          @media (max-width: 768px) {
+            grid-template-columns: 1fr;
+          }
+        }
+
+        .status-controls {
+          .status-toggle {
+            width: 100%;
+
+            .toggle-content {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              width: 100%;
+              padding: 16px 0;
+
+              .toggle-label {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+
+                strong {
+                  font-size: 1rem;
+                  color: #333;
+                }
+
+                .toggle-description {
+                  font-size: 0.875rem;
+                  color: #666;
+                  max-width: 400px;
+                }
+              }
+
+              mat-icon {
+                font-size: 1.5rem;
+                width: 1.5rem;
+                height: 1.5rem;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // Form field styling
+    mat-form-field {
+      width: 100%;
+
+      &.error {
+        mat-label {
+          color: #f44336;
+        }
+
+        .mat-mdc-form-field-outline {
+          color: #f44336;
+        }
+      }
+
+      mat-icon[matSuffix] {
+        color: #666;
+        font-size: 1.25rem;
+        width: 1.25rem;
+        height: 1.25rem;
+      }
+
+      .mat-mdc-form-field-hint-wrapper {
+        font-size: 0.75rem;
+        color: #666;
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 60px;
+      }
+    }
+
+    // Form actions
+    .form-actions {
+      margin-top: 32px;
+      padding: 24px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+      .action-buttons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        margin-bottom: 16px;
+
+        button {
+          mat-icon {
+            margin-right: 8px;
+          }
+
+          mat-spinner {
+            margin-right: 8px;
+          }
+        }
+
+        @media (max-width: 768px) {
+          flex-direction: column-reverse;
+
+          button {
+            width: 100%;
+          }
+        }
+      }
+
+      .form-status {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #ff9800;
+        font-size: 0.875rem;
+        justify-content: center;
+
+        mat-icon {
+          font-size: 1.125rem;
+          width: 1.125rem;
+          height: 1.125rem;
+        }
+      }
+    }
+  }
+}
+
+// Global form field improvements
+::ng-deep .trainer-form-container {
+  .mat-mdc-form-field {
+    .mat-mdc-form-field-outline {
+      transition: color 0.2s ease-in-out;
+    }
+
+    &.mat-focused {
+      .mat-mdc-form-field-outline {
+        border-width: 2px;
+      }
+    }
+
+    &.mat-form-field-invalid {
+      .mat-mdc-form-field-outline {
+        border-color: #f44336;
+      }
+    }
+  }
+
+  .mat-mdc-slide-toggle {
+    .mat-mdc-slide-toggle-bar {
+      height: 20px;
+      border-radius: 10px;
+    }
+
+    .mat-mdc-slide-toggle-thumb {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+    }
+  }
+}
+
+// Animation for form sections
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.form-section {
+  animation: slideInUp 0.3s ease-out;
+}
+
+// Responsive improvements
+@media (max-width: 1024px) {
+  .trainer-form-container {
+    padding: 16px;
+
+    .form-content {
+      .form-section {
+        margin-bottom: 16px;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .trainer-form-container {
+    padding: 12px;
+
+    .form-header {
+      .header-content {
+        .title-section {
+          h1 {
+            font-size: 1.5rem;
+
+            mat-icon {
+              font-size: 1.5rem;
+              width: 1.5rem;
+              height: 1.5rem;
+            }
+          }
+        }
+      }
+    }
+
+    .form-content {
+      .form-section {
+        mat-card-content {
+          .form-grid {
+            gap: 12px;
+          }
+        }
+      }
+
+      .form-actions {
+        padding: 16px;
+
+        .action-buttons {
+          gap: 8px;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,182 @@
+<div class="register-container">
+    <div class="register-background">
+        <div class="background-overlay"></div>
+    </div>
+
+    <div class="register-content">
+        <div class="register-card">
+            <!-- Header -->
+            <div class="register-header">
+                <div class="logo-container">
+                    <mat-icon class="app-logo">school</mat-icon>
+                </div>
+                <h1 class="register-title">Create Account</h1>
+                <p class="register-subtitle">Join the Edu Track System</p>
+            </div>
+
+            <!-- Progress Stepper -->
+            <div class="stepper-container">
+                <mat-stepper #stepper [selectedIndex]="currentStep" orientation="horizontal" class="custom-stepper">
+                    <mat-step [completed]="isStepValid(0)">
+                        <ng-template matStepLabel>Personal Information</ng-template>
+                    </mat-step>
+                    <mat-step [completed]="isStepValid(1)">
+                        <ng-template matStepLabel>Account Setup</ng-template>
+                    </mat-step>
+                </mat-stepper>
+            </div>
+
+            <!-- Registration Form -->
+            <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+
+                <!-- Step 1: Personal Information -->
+                <div *ngIf="currentStep === 0" class="form-step" [@slideIn]>
+                    <h3 class="step-title">Personal Information</h3>
+
+                    <div class="form-row">
+                        <mat-form-field appearance="outline" class="half-width">
+                            <mat-label>First Name</mat-label>
+                            <input matInput formControlName="firstName" placeholder="Enter your first name">
+                            <mat-icon matSuffix>person</mat-icon>
+                            <mat-error
+                                *ngIf="personalInfoGroup.firstName?.invalid && personalInfoGroup.firstName?.touched">
+                                {{ getErrorMessage('firstName') }}
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" class="half-width">
+                            <mat-label>Last Name</mat-label>
+                            <input matInput formControlName="lastName" placeholder="Enter your last name">
+                            <mat-icon matSuffix>person</mat-icon>
+                            <mat-error
+                                *ngIf="personalInfoGroup.lastName?.invalid && personalInfoGroup.lastName?.touched">
+                                {{ getErrorMessage('lastName') }}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Phone Number</mat-label>
+                        <input matInput formControlName="phoneNumber" placeholder="Enter your phone number">
+                        <mat-icon matSuffix>phone</mat-icon>
+                        <mat-error
+                            *ngIf="personalInfoGroup.phoneNumber?.invalid && personalInfoGroup.phoneNumber?.touched">
+                            {{ getErrorMessage('phoneNumber') }}
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Address</mat-label>
+                        <textarea matInput formControlName="address" placeholder="Enter your address"
+                            rows="3"></textarea>
+                        <mat-icon matSuffix>location_on</mat-icon>
+                        <mat-error *ngIf="personalInfoGroup.address?.invalid && personalInfoGroup.address?.touched">
+                            {{ getErrorMessage('address') }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Step 2: Account Information -->
+                <div *ngIf="currentStep === 1" class="form-step" [@slideIn]>
+                    <h3 class="step-title">Account Setup</h3>
+
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Email Address</mat-label>
+                        <input matInput formControlName="email" type="email" placeholder="Enter your email address">
+                        <mat-icon matSuffix>email</mat-icon>
+                        <mat-error *ngIf="accountInfoGroup.email?.invalid && accountInfoGroup.email?.touched">
+                            {{ getErrorMessage('email') }}
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Username</mat-label>
+                        <input matInput formControlName="username" placeholder="Choose a username">
+                        <mat-icon matSuffix>account_circle</mat-icon>
+                        <mat-error *ngIf="accountInfoGroup.username?.invalid && accountInfoGroup.username?.touched">
+                            {{ getErrorMessage('username') }}
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Password</mat-label>
+                        <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password"
+                            placeholder="Enter a strong password">
+                        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
+                            <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                        </button>
+                        <mat-error *ngIf="accountInfoGroup.password?.invalid && accountInfoGroup.password?.touched">
+                            {{ getErrorMessage('password') }}
+                        </mat-error>
+                        <mat-hint *ngIf="registerForm.get('password')?.value">
+                            <div class="password-strength">
+                                <span class="strength-label">Password strength:</span>
+                                <div class="strength-indicator" [ngClass]="getPasswordStrength()">
+                                    <div class="strength-bar"></div>
+                                    <div class="strength-bar"></div>
+                                    <div class="strength-bar"></div>
+                                </div>
+                                <span class="strength-text">{{ getPasswordStrength() | titlecase }}</span>
+                            </div>
+                        </mat-hint>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Confirm Password</mat-label>
+                        <input matInput [type]="hideConfirmPassword ? 'password' : 'text'"
+                            formControlName="confirmPassword" placeholder="Confirm your password">
+                        <button mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword"
+                            type="button">
+                            <mat-icon>{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                        </button>
+                        <mat-error
+                            *ngIf="(accountInfoGroup.confirmPassword?.invalid && accountInfoGroup.confirmPassword?.touched) || registerForm.hasError('passwordMismatch')">
+                            {{ getErrorMessage('confirmPassword') }}
+                        </mat-error>
+                    </mat-form-field>
+
+                    <div class="terms-section">
+                        <mat-checkbox formControlName="acceptTerms" class="terms-checkbox">
+                            I agree to the <a href="#" target="_blank">Terms of Service</a> and <a href="#"
+                                target="_blank">Privacy Policy</a>
+                        </mat-checkbox>
+                        <mat-error
+                            *ngIf="accountInfoGroup.acceptTerms?.invalid && accountInfoGroup.acceptTerms?.touched">
+                            You must accept the terms and conditions
+                        </mat-error>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <button type="button" mat-stroked-button *ngIf="currentStep > 0" (click)="previousStep()"
+                        class="back-button">
+                        <mat-icon>arrow_back</mat-icon>
+                        Back
+                    </button>
+
+                    <button type="button" mat-raised-button color="primary" *ngIf="currentStep < maxSteps - 1"
+                        (click)="nextStep()" class="next-button">
+                        Next
+                        <mat-icon>arrow_forward</mat-icon>
+                    </button>
+
+                    <button type="submit" mat-raised-button color="primary" *ngIf="currentStep === maxSteps - 1"
+                        [disabled]="registerForm.invalid || loading" class="register-button">
+                        <mat-spinner *ngIf="loading" diameter="20" class="button-spinner"></mat-spinner>
+                        <span *ngIf="!loading">Create Account</span>
+                        <span *ngIf="loading">Creating Account...</span>
+                    </button>
+                </div>
+
+                <!-- Login Link -->
+                <div class="login-section">
+                    <p class="login-text">Already have an account?</p>
+                    <button type="button" mat-button class="login-link" (click)="navigateToLogin()">
+                        Sign In
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

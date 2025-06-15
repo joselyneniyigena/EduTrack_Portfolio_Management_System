@@ -1,0 +1,106 @@
+<div class="login-container">
+  <div class="login-background">
+    <div class="background-overlay"></div>
+  </div>
+  
+  <div class="login-content">
+    <div class="login-card">
+      <!-- Logo and Header -->
+      <div class="login-header">
+        <div class="logo-container">
+          <mat-icon class="app-logo">school</mat-icon>
+        </div>
+        <h1 class="login-title">Welcome Back</h1>
+        <p class="login-subtitle">Sign in to your Edu Track System account</p>
+      </div>
+
+      <!-- Login Form -->
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+        <!-- Username Field -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Username</mat-label>
+          <input matInput 
+                 formControlName="username"
+                 placeholder="Enter your username"
+                 autocomplete="username"
+                 [class.error]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched">
+          <mat-icon matSuffix>person</mat-icon>
+          <mat-error *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched">
+            {{ getErrorMessage('username') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Password Field -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Password</mat-label>
+          <input matInput 
+                 [type]="hidePassword ? 'password' : 'text'"
+                 formControlName="password"
+                 placeholder="Enter your password"
+                 autocomplete="current-password"
+                 [class.error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+          <button mat-icon-button 
+                  matSuffix 
+                  (click)="hidePassword = !hidePassword"
+                  type="button"
+                  [attr.aria-label]="'Hide password'"
+                  [attr.aria-pressed]="hidePassword">
+            <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-error *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+            {{ getErrorMessage('password') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Remember Me -->
+        <div class="form-options">
+          <mat-checkbox formControlName="rememberMe" class="remember-me">
+            Remember me
+          </mat-checkbox>
+          
+          <button type="button" 
+                  mat-button 
+                  class="forgot-password-link"
+                  (click)="navigateToForgotPassword()">
+            Forgot Password?
+          </button>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" 
+                mat-raised-button 
+                color="primary" 
+                class="login-button full-width"
+                [disabled]="loginForm.invalid || loading">
+          <mat-spinner *ngIf="loading" diameter="20" class="button-spinner"></mat-spinner>
+          <span *ngIf="!loading">Sign In</span>
+          <span *ngIf="loading">Signing In...</span>
+        </button>
+
+        <!-- Divider -->
+        <div class="form-divider">
+          <mat-divider></mat-divider>
+          <span class="divider-text">or</span>
+          <mat-divider></mat-divider>
+        </div>
+
+        <!-- Register Link -->
+        <div class="register-section">
+          <p class="register-text">Don't have an account?</p>
+          <button type="button" 
+                  mat-stroked-button 
+                  color="primary"
+                  class="register-button full-width"
+                  (click)="navigateToRegister()">
+            Create Account
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Footer -->
+    <div class="login-footer">
+      <p>&copy; 2024 Edu Track System. All rights reserved.</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,204 @@
+<div class="trainee-dashboard">
+    <!-- Header Section -->
+    <div class="dashboard-header">
+        <div class="welcome-section">
+            <h1>My Learning Dashboard</h1>
+            <p *ngIf="currentUser$ | async as user">
+                Welcome back, {{ user.firstName }}! Keep up the great work!
+            </p>
+        </div>
+        <button mat-raised-button color="primary" (click)="refreshData()">
+            <mat-icon>refresh</mat-icon>
+            Refresh
+        </button>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div *ngIf="loading" class="loading-container">
+        <mat-spinner diameter="50"></mat-spinner>
+        <p>Loading your progress...</p>
+    </div>
+
+    <!-- Dashboard Content -->
+    <div *ngIf="!loading" class="dashboard-content">
+        <!-- Progress Overview -->
+        <mat-card class="progress-overview">
+            <mat-card-header>
+                <mat-card-title>Your Progress Overview</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="progress-content">
+                    <div class="progress-circle">
+                        <div class="circular-progress">
+                            <span class="progress-value">{{ dashboardData.overallProgress }}%</span>
+                        </div>
+                    </div>
+                    <div class="progress-details">
+                        <div class="detail-item">
+                            <h3>{{ dashboardData.enrolledCourses }}</h3>
+                            <p>Enrolled Courses</p>
+                        </div>
+                        <div class="detail-item">
+                            <h3>{{ dashboardData.completedAssessments }}</h3>
+                            <p>Completed Assessments</p>
+                        </div>
+                        <div class="detail-item">
+                            <h3>{{ dashboardData.pendingAssessments }}</h3>
+                            <p>Pending Assessments</p>
+                        </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <!-- Main Content Row -->
+        <div class="content-row">
+            <!-- Current Modules -->
+            <mat-card class="modules-card">
+                <mat-card-header>
+                    <mat-card-title>Current Modules</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="modules-list">
+                        <div *ngFor="let module of dashboardData.currentModules" class="module-item">
+                            <div class="module-info">
+                                <h4>{{ module.name }}</h4>
+                                <p>{{ module.instructor }}</p>
+                                <div class="module-progress">
+                                    <mat-progress-bar mode="determinate" [value]="module.progress"
+                                        [color]="getProgressColor(module.progress)">
+                                    </mat-progress-bar>
+                                    <span>{{ module.progress }}%</span>
+                                </div>
+                            </div>
+                            <div class="module-actions">
+                                <button mat-icon-button color="primary" [routerLink]="['/modules', module.id]">
+                                    <mat-icon>play_arrow</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div *ngIf="dashboardData.currentModules.length === 0" class="no-modules">
+                            <mat-icon>book</mat-icon>
+                            <p>No active modules</p>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+
+            <!-- Upcoming Deadlines -->
+            <mat-card class="deadlines-card">
+                <mat-card-header>
+                    <mat-card-title>Upcoming Deadlines</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="deadlines-list">
+                        <div *ngFor="let deadline of dashboardData.upcomingDeadlines" class="deadline-item">
+                            <div class="deadline-info">
+                                <h4>{{ deadline.title }}</h4>
+                                <p>{{ deadline.moduleName }}</p>
+                                <span class="deadline-date" [class.urgent]="deadline.isUrgent">
+                                    {{ deadline.dueDate | date:'medium' }}
+                                </span>
+                            </div>
+                            <div class="deadline-priority">
+                                <mat-chip [color]="deadline.isUrgent ? 'warn' : 'primary'" selected>
+                                    {{ deadline.priority }}
+                                </mat-chip>
+                            </div>
+                        </div>
+
+                        <div *ngIf="dashboardData.upcomingDeadlines.length === 0" class="no-deadlines">
+                            <mat-icon>event_available</mat-icon>
+                            <p>No upcoming deadlines</p>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+
+        <!-- Recent Grades -->
+        <mat-card class="grades-card">
+            <mat-card-header>
+                <mat-card-title>Recent Grades</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="grades-table">
+                    <table mat-table [dataSource]="dashboardData.recentGrades" class="recent-grades-table">
+                        <ng-container matColumnDef="assessment">
+                            <th mat-header-cell *matHeaderCellDef>Assessment</th>
+                            <td mat-cell *matCellDef="let grade">{{ grade.assessmentTitle }}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="module">
+                            <th mat-header-cell *matHeaderCellDef>Module</th>
+                            <td mat-cell *matCellDef="let grade">{{ grade.moduleName }}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="score">
+                            <th mat-header-cell *matHeaderCellDef>Score</th>
+                            <td mat-cell *matCellDef="let grade">
+                                <span [class]="'score-' + grade.status.toLowerCase()">
+                                    {{ grade.score }}%
+                                </span>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="status">
+                            <th mat-header-cell *matHeaderCellDef>Status</th>
+                            <td mat-cell *matCellDef="let grade">
+                                <mat-chip [color]="grade.status === 'PASS' ? 'primary' : 'warn'" selected>
+                                    {{ grade.status }}
+                                </mat-chip>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="date">
+                            <th mat-header-cell *matHeaderCellDef>Date</th>
+                            <td mat-cell *matCellDef="let grade">{{ grade.gradedAt | date:'short' }}</td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="['assessment', 'module', 'score', 'status', 'date']"></tr>
+                        <tr mat-row *matRowDef="let row; columns: ['assessment', 'module', 'score', 'status', 'date'];">
+                        </tr>
+                    </table>
+
+                    <div *ngIf="dashboardData.recentGrades.length === 0" class="no-grades">
+                        <mat-icon>grade</mat-icon>
+                        <p>No recent grades available</p>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <!-- Quick Actions -->
+        <mat-card class="quick-actions-card">
+            <mat-card-header>
+                <mat-card-title>Quick Actions</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="quick-actions">
+                    <button mat-raised-button color="primary" routerLink="/assessments/pending">
+                        <mat-icon>assignment</mat-icon>
+                        View Pending Assessments
+                    </button>
+
+                    <button mat-raised-button color="primary" routerLink="/courses">
+                        <mat-icon>book</mat-icon>
+                        Browse Courses
+                    </button>
+
+                    <button mat-raised-button color="accent" routerLink="/evidence/my-submissions">
+                        <mat-icon>cloud_upload</mat-icon>
+                        Upload Evidence
+                    </button>
+
+                    <button mat-raised-button color="accent" routerLink="/learning-units">
+                        <mat-icon>school</mat-icon>
+                        Study Materials
+                    </button>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

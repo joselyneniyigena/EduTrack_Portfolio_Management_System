@@ -1,0 +1,502 @@
+/* trade-management/trade-management.component.scss */
+
+.trade-management-container {
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+
+    .header {
+        text-align: center;
+        margin-bottom: 30px;
+
+        h1 {
+            color: #333;
+            margin-bottom: 8px;
+            font-weight: 300;
+            font-size: 2.5rem;
+        }
+
+        p {
+            color: #666;
+            font-size: 1.1rem;
+            margin: 0;
+        }
+    }
+}
+
+// Loading overlay
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+
+    mat-spinner {
+        margin-bottom: 20px;
+    }
+
+    p {
+        font-size: 1.1rem;
+        color: #666;
+    }
+}
+
+// Tab content
+.tab-content {
+    padding: 20px 0;
+}
+
+.content-layout {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 30px;
+
+    @media (max-width: 1200px) {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
+
+// Cards
+.form-card,
+.table-card {
+    height: fit-content;
+
+    mat-card-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+
+        mat-card-title {
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .spacer {
+            flex: 1;
+        }
+    }
+}
+
+.form-card {
+    position: sticky;
+    top: 20px;
+
+    mat-card-content {
+        padding-top: 0;
+    }
+}
+
+// Forms
+.form-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+
+    .full-width {
+        width: 100%;
+    }
+
+    .half-width {
+        flex: 1;
+    }
+}
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+
+    button {
+        min-width: 140px;
+
+        mat-icon {
+            margin-right: 8px;
+        }
+    }
+}
+
+// Search field
+.search-field {
+    width: 300px;
+
+    @media (max-width: 768px) {
+        width: 100%;
+        margin-top: 16px;
+    }
+}
+
+// Tables
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+
+    .full-width-table {
+        width: 100%;
+        min-width: 600px;
+    }
+}
+
+// Table cells
+.description-cell {
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    @media (max-width: 768px) {
+        max-width: 150px;
+    }
+}
+
+// Chips
+mat-chip {
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+// Form field improvements
+mat-form-field {
+    &.mat-form-field {
+        .mat-form-field-wrapper {
+            margin-bottom: 0;
+        }
+    }
+}
+
+// Tab group customization
+mat-tab-group {
+    .mat-tab-labels {
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .mat-tab-label {
+        min-width: 120px;
+        padding: 0 24px;
+        font-weight: 500;
+
+        &.mat-tab-label-active {
+            opacity: 1;
+        }
+    }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+    .trade-management-container {
+        padding: 10px;
+    }
+
+    .content-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 8px;
+
+        .half-width {
+            width: 100%;
+        }
+    }
+
+    .form-actions {
+        flex-direction: column;
+
+        button {
+            width: 100%;
+        }
+    }
+
+    .header {
+        h1 {
+            font-size: 2rem;
+        }
+    }
+
+    mat-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+
+        .spacer {
+            display: none;
+        }
+    }
+}
+
+// Custom snackbar styles
+.success-snackbar {
+    background-color: #4caf50 !important;
+    color: white !important;
+}
+
+.error-snackbar {
+    background-color: #f44336 !important;
+    color: white !important;
+}
+
+// Table row hover effect
+.mat-row:hover {
+    background-color: #f5f5f5;
+}
+
+// Action buttons in table
+td {
+    button {
+        margin-right: 8px;
+
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+}
+
+// Form validation states
+.mat-form-field.ng-invalid.ng-touched {
+    .mat-form-field-outline-thick {
+        color: #f44336;
+    }
+}
+
+// Loading states for buttons
+button[disabled] {
+    cursor: not-allowed !important;
+}
+
+// Enhanced table styling
+.mat-table {
+    box-shadow: none;
+    border-radius: 8px;
+    overflow: hidden;
+
+    .mat-header-cell {
+        background-color: #f8f9fa;
+        color: #495057;
+        font-weight: 600;
+        font-size: 0.875rem;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .mat-cell {
+        border-bottom: 1px solid #e9ecef;
+        font-size: 0.875rem;
+    }
+
+    .mat-row:nth-child(even) {
+        background-color: #f8f9fa;
+    }
+}
+
+// Card enhancements
+mat-card {
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e9ecef;
+
+    mat-card-header {
+        background-color: #f8f9fa;
+        margin: -16px -16px 16px -16px;
+        padding: 16px;
+        border-radius: 12px 12px 0 0;
+        border-bottom: 1px solid #e9ecef;
+    }
+}
+
+// Button enhancements
+button {
+    &.mat-raised-button {
+        border-radius: 6px;
+        text-transform: none;
+        font-weight: 500;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+        &:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+    }
+
+    &.mat-icon-button {
+        border-radius: 50%;
+
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.04);
+        }
+    }
+}
+
+// Form field enhancements
+mat-form-field {
+    &.mat-form-field-appearance-outline {
+        .mat-form-field-outline {
+            border-radius: 6px;
+        }
+
+        &.mat-focused {
+            .mat-form-field-outline-thick {
+                color: #1976d2;
+            }
+        }
+    }
+}
+
+// Tab enhancements
+mat-tab-group {
+    .mat-tab-label {
+        border-radius: 6px 6px 0 0;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.04);
+        }
+
+        &.mat-tab-label-active {
+            background-color: #fff;
+            border-bottom: 2px solid #1976d2;
+        }
+    }
+}
+
+// Pagination styling
+mat-paginator {
+    border-top: 1px solid #e9ecef;
+    background-color: #f8f9fa;
+    border-radius: 0 0 8px 8px;
+}
+
+// Chip enhancements
+mat-chip {
+    border-radius: 16px;
+    font-size: 0.75rem;
+    padding: 4px 12px;
+
+    &.mat-chip-with-leading-icon {
+        padding-left: 8px;
+    }
+}
+
+// Tooltip styling
+.mat-tooltip {
+    font-size: 0.75rem;
+    border-radius: 4px;
+}
+
+// Animation classes
+.fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+// Print styles
+@media print {
+    .trade-management-container {
+
+        .loading-overlay,
+        .form-actions,
+        .search-field,
+        mat-paginator,
+        button {
+            display: none !important;
+        }
+
+        .content-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .form-card {
+            display: none;
+        }
+
+        .table-card {
+            box-shadow: none;
+            border: 1px solid #000;
+        }
+    }
+}
+
+// High contrast mode support
+@media (prefers-contrast: high) {
+    .trade-management-container {
+        .mat-table {
+            .mat-header-cell {
+                background-color: #ffffff;
+                color: #fff;
+            }
+
+            .mat-cell {
+                border-bottom: 2px solid #000;
+            }
+        }
+
+        mat-card {
+            border: 2px solid #000;
+        }
+    }
+}
+
+// Dark theme support
+@media (prefers-color-scheme: dark) {
+    .trade-management-container {
+        background-color: #ffffff;
+        color: #ffffff;
+
+        .header {
+            h1 {
+                color: #ffffff;
+            }
+
+            p {
+                color: #b0b0b0;
+            }
+        }
+
+        mat-card {
+            background-color: #ffffff;
+            border-color: #333;
+
+            mat-card-header {
+                background-color: #ffffff;
+                border-bottom-color: #333;
+            }
+        }
+
+        .mat-table {
+            .mat-header-cell {
+                background-color: #2d2d2d;
+                color: #ffffff;
+                border-bottom-color: #333;
+            }
+
+            .mat-cell {
+                border-bottom-color: #333;
+                color: #ffffff;
+            }
+
+            .mat-row:nth-child(even) {
+                background-color: #ffffff;
+            }
+
+            .mat-row:hover {
+                background-color: #333 !important;
+            }
+        }
+    }
+}

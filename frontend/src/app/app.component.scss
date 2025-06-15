@@ -1,0 +1,465 @@
+// ==========================================
+// SCSS VARIABLES & MIXINS
+// ==========================================
+
+// Color Palette (example - adjust to your brand)
+$color-primary: #3b82f6;      // Blue-500
+$color-primary-dark: #1d4ed8; // Blue-700
+$color-accent: #f97316;       // Orange-500 (example for messages badge)
+$color-warn: #ef4444;         // Red-500 (example for notifications badge)
+$color-success: #10b981;      // Green-500 (for online status)
+
+$color-dark-bg-start: #1e293b; // Slate-800
+$color-dark-bg-end: #334155;   // Slate-700
+
+$color-text-light: white;
+$color-text-light-subtle: rgba(255, 255, 255, 0.7);
+$color-text-dark: #1e293b;    // Slate-800
+$color-text-muted: #64748b;   // Slate-500
+$color-text-placeholder: rgba(255, 255, 255, 0.6);
+
+$color-border-light: rgba(255, 255, 255, 0.1);
+$color-border-dark: #e2e8f0; // Slate-200
+
+// Backgrounds
+$bg-light-hover: rgba(255, 255, 255, 0.1); // For light-themed elements on dark bg
+$bg-light-active: rgba(255, 255, 255, 0.15);
+$bg-dark-hover: #f1f5f9; // Slate-100
+$bg-dark-active: #e2e8f0; // Slate-200
+$bg-light-faint: #f8fafc; // Slate-50
+
+// Spacing
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 40px;
+
+// Border Radius
+$radius-sm: 8px;
+$radius-md: 12px;
+$radius-lg: 16px;
+$radius-pill: 9999px;
+
+// Shadows
+$shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 20px rgba(0, 0, 0, 0.08);
+$shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.15);
+$shadow-primary-sm: 0 4px 12px rgba($color-primary, 0.3);
+$shadow-primary-md: 0 6px 16px rgba($color-primary, 0.4);
+
+// Transitions
+$transition-ease: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+$transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+// Layout and Z-index Variables
+$header-height-desktop: 96px;
+$header-height-lg: 88px; // For 1200px breakpoint
+$header-height-md: 76px; // For 1024px breakpoint
+$header-height-sm: 68px; // For 768px breakpoint
+
+$drawer-width-desktop: 300px;
+
+$z-header: 1100;
+$z-drawer: 1000; // Default drawer below header
+$z-drawer-mobile-overlay: 1050; // Higher for mobile overlay effect, below main overlays
+$z-backdrop: 1150; // Overlay backdrop (e.g., for mat-drawer)
+$z-overlay: 1200; // For Material overlays like dialogs, default menus
+$z-menu-specific: 1300; // Even higher for specific menus like notifications/user dropdowns
+$z-loading-spinner: 9999; // Highest priority for global loading
+
+// Colors for layout backgrounds
+$layout-bg-light: #f8f9fa; // Very light gray (Slate-50)
+$drawer-bg-light: #ffffff; // White
+$content-bg-light: #f8f9fa; // Very light gray
+$drawer-border-light: #e0e0e0; // Light gray (Gray-300)
+
+// Global loading spinner colors
+$loading-bg-light: rgba(255, 255, 255, 0.95);
+$loading-text-light: #666;
+$loading-shadow-light: 0 4px 20px rgba(0, 0, 0, 0.15);
+
+// Dark Mode Colors
+$layout-bg-dark: #1a1a1a;
+$drawer-bg-dark: #2d2d2d;
+$content-bg-dark: #1a1a1a;
+$drawer-border-dark: #444;
+$loading-bg-dark: rgba(45, 45, 45, 0.95);
+$loading-text-dark: #cccccc;
+$loading-shadow-dark: 0 4px 20px rgba(0, 0, 0, 0.3);
+
+// Font stack
+$font-family-primary: 'Inter', sans-serif;
+
+// Mixins for consistent sizing
+@mixin icon-size($size) {
+  font-size: $size !important;
+  width: $size !important;
+  height: $size !important;
+}
+
+@mixin button-square($size) {
+  width: $size !important;
+  height: $size !important;
+  min-width: $size !important;
+  min-height: $size !important;
+  padding: 0 !important; // Ensure no default padding from Material
+}
+
+@mixin avatar-base($size, $border-color) {
+  width: $size !important;
+  height: $size !important;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid $border-color;
+  transition: border-color 0.3s ease;
+}
+
+@mixin placeholder-style($size) {
+  width: $size !important;
+  height: $size !important;
+  border-radius: 50%;
+  background: linear-gradient(135deg, $color-primary, $color-primary-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: $color-text-light;
+}
+
+// ==========================================
+// MAIN APPLICATION CONTAINER
+// ==========================================
+
+.app-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: $layout-bg-light;
+  overflow: hidden; // Prevent overall page scrolling; individual sections will scroll
+  font-family: $font-family-primary; // Apply consistent font
+}
+
+// Header positioning - ensure it stays on top
+app-header {
+  position: sticky;
+  top: 0;
+  z-index: $z-header; // Higher than drawer
+  flex-shrink: 0; // Prevent header from shrinking
+}
+
+// Main container holding the drawer and content
+.main-container {
+  flex: 1; // Takes remaining vertical space
+  height: calc(100vh - #{$header-height-desktop}); // Dynamically calculate height based on header
+  position: relative;
+  overflow: hidden; // Controls overall scroll for drawer and content
+}
+
+// Material Drawer Container - remove default margins and ensure full height
+::ng-deep .mat-drawer-container {
+  background-color: transparent !important; // Prevent extra background from Material
+  height: 100% !important; // Ensure full height
+  margin: 0 !important; // Remove any default margins
+  padding: 0 !important; // Remove any default padding
+}
+
+// Sidebar Drawer Styles
+.app-drawer {
+  width: $drawer-width-desktop;
+  border-right: 1px solid $drawer-border-light;
+  background-color: $drawer-bg-light;
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05); // Subtle shadow
+  z-index: $z-drawer; // Default drawer below header
+  
+  // Override Material's default inner container overflow and add proper spacing
+  ::ng-deep .mat-drawer-inner-container {
+    overflow: hidden; // Hide main scrollbar on drawer
+    display: flex; // Ensure sidebar content fills height
+    flex-direction: column;
+    height: 100%; // Make sure inner container takes full height
+    padding-top: 0; // Remove any default top padding that might interfere
+  }
+}
+
+// Sidebar Content - Add proper spacing to avoid header overlap
+app-sidebar {
+  height: 100%;
+  display: block; // Ensures it takes up full height of drawer inner container
+  overflow-y: auto; // Allow sidebar content to scroll if it overflows
+  overflow-x: hidden; // Prevent horizontal scroll in sidebar
+  padding-top: $spacing-lg; // Add top padding to create space from header
+  padding-bottom: $spacing-lg; // Add some bottom padding
+  padding-left: $spacing-md; // Left padding for content
+  padding-right: $spacing-md; // Right padding for content
+  
+  // First child element gets extra top margin for better spacing
+  > *:first-child {
+    margin-top: $spacing-sm;
+  }
+}
+
+// CRITICAL: Force sidebar behavior with side mode
+// When sidebar is in 'side' mode, the content should be pushed to the right
+.main-container.desktop.sidenav-open {
+  ::ng-deep .mat-drawer-container {
+    .mat-drawer-content {
+      margin-left: $drawer-width-desktop !important;
+      transition: margin-left 0.5s ease !important;
+    }
+  }
+}
+
+.main-container.desktop.sidenav-closed {
+  ::ng-deep .mat-drawer-container {
+    .mat-drawer-content {
+      margin-left: 0 !important;
+      transition: margin-left 0.5s ease !important;
+    }
+  }
+}
+
+// Mobile mode - no margin needed as sidebar overlays
+.main-container.mobile {
+  ::ng-deep .mat-drawer-container {
+    .mat-drawer-content {
+      margin-left: 0 !important;
+    }
+  }
+}
+
+// Main Content Area
+.main-content {
+  background-color: $content-bg-light;
+  overflow: auto; // Allow content to scroll if it overflows
+  position: relative;
+  padding: $spacing-lg; // Add consistent padding around content
+  margin: 0; // Ensure no margin interference
+}
+
+// Fix Material Drawer Content positioning
+::ng-deep .mat-drawer-content {
+  overflow: auto !important; // Ensure scrollability for content area
+  position: relative; // Ensure proper positioning
+  padding: 0; // Remove any default padding
+  margin: 0; // Remove any default margin
+  width: auto; // Let the margin handle positioning
+}
+
+// Global Loading Spinner Overlay
+.global-loading {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: $z-loading-spinner; // Highest priority to be on top
+  background: $loading-bg-light;
+  padding: 32px; // Increased padding for a more substantial look
+  border-radius: $radius-lg; // Larger border-radius
+  box-shadow: $loading-shadow-light;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-md; // Consistent spacing
+
+  // Styling for the "Loading..." text
+  &::after {
+    content: 'Loading...';
+    color: $loading-text-light;
+    font-size: 16px; // Slightly larger text
+    font-weight: 500;
+  }
+}
+
+// ==========================================
+// ANGULAR MATERIAL OVERLAY Z-INDEX FIXES
+// ==========================================
+
+// Ensure all CDK overlays (dialogs, tooltips, menus) are properly layered
+::ng-deep .cdk-overlay-container {
+  z-index: $z-overlay; // Default overlay z-index
+}
+
+// Backdrop for overlays (e.g., dialogs, over-mode drawers)
+::ng-deep .cdk-overlay-backdrop {
+  z-index: $z-backdrop; // Always below specific overlays
+}
+
+// General Material menu panel overrides
+::ng-deep .mat-mdc-menu-panel {
+  z-index: $z-overlay; // Default for all Material menus
+  max-height: calc(100vh - 100px); // Prevent menus from going off screen
+  // Ensure background and shadow are inherited from specific menu styles or default to elegant ones
+}
+
+// Fix for notification and user menus specifically (higher z-index if needed)
+::ng-deep .mat-mdc-menu-panel.notification-menu,
+::ng-deep .mat-mdc-menu-panel.user-dropdown {
+  z-index: $z-menu-specific !important; // Explicitly higher for these specific menus
+  margin-top: 16px !important; // Increased from 8px for better positioning, addressing clipping
+}
+
+// ==========================================
+// RESPONSIVE DESIGN
+// ==========================================
+
+@media (max-width: 1200px) {
+  .main-container {
+    height: calc(100vh - #{$header-height-lg}); // Adjust height for 1200px breakpoint
+  }
+}
+
+@media (max-width: 1024px) {
+  .main-container {
+    height: calc(100vh - #{$header-height-md}); // Adjust height for 1024px breakpoint
+  }
+
+  // Ensure mobile dropdown menus work properly (adjust max-width for tablet)
+  ::ng-deep .mat-mdc-menu-panel {
+    max-height: calc(100vh - 80px);
+    max-width: calc(100vw - $spacing-lg * 2); // Wider on tablet than mobile
+  }
+}
+
+@media (max-width: 768px) {
+  .app-container {
+    overflow: hidden; // Keep hidden for smooth transitions, main-content handles scrolling
+  }
+
+  .main-container {
+    height: calc(100vh - #{$header-height-sm}); // Adjust height for 768px breakpoint
+  }
+
+  .app-drawer {
+    width: 80%; // Make it slightly smaller than full width on mobile
+    max-width: 320px; // Cap the max width on larger mobile devices/small tablets
+    position: absolute; // For `over` mode, this is typical
+    z-index: $z-drawer-mobile-overlay; // Higher on mobile for overlay effect
+
+    // Mobile sidebar gets less padding to maximize space
+    app-sidebar {
+      padding-left: $spacing-sm;
+      padding-right: $spacing-sm;
+      padding-top: $spacing-md; // Slightly less top padding on mobile
+    }
+  }
+
+  // On mobile, content should take full width when drawer is closed
+  .main-content {
+    padding: $spacing-md; // Reduce padding on mobile for more space
+  }
+
+  // Ensure mobile dropdown menus work properly (adjust max-width for phone)
+  ::ng-deep .mat-mdc-menu-panel {
+    max-height: calc(100vh - 80px);
+    max-width: calc(100vw - $spacing-md * 2); // Standard mobile padding
+  }
+}
+
+// ==========================================
+// DARK MODE SUPPORT
+// ==========================================
+
+@media (prefers-color-scheme: dark) {
+  .app-container {
+    background-color: $layout-bg-dark;
+  }
+
+  .app-drawer {
+    background-color: $drawer-bg-dark;
+    border-right-color: $drawer-border-dark;
+  }
+
+  .main-content {
+    background-color: $content-bg-dark;
+  }
+
+  .global-loading {
+    background: $loading-bg-dark;
+    box-shadow: $loading-shadow-dark;
+
+    &::after {
+      color: $loading-text-dark;
+    }
+  }
+
+  // Dark mode for Material overlays (menus, dialogs)
+  ::ng-deep .mat-mdc-menu-panel {
+    background: #3a3a3a !important; // Slightly lighter dark for better contrast against main content
+    color: #ffffff !important;
+    border: 1px solid #555 !important; // Slightly stronger border for definition
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4) !important; // More prominent shadow
+  }
+
+  // Specific menu item hover states in dark mode
+  .notification-menu, .user-dropdown {
+    // FIX: Removed pointer-events: none !important; from .user-menu-header.
+    // The [disabled]="true" on the mat-menu-item in HTML is enough to make it non-clickable.
+    .user-menu-header {
+      cursor: default !important; // Still ensure cursor is default for header
+      // Keep pointer-events: none on .user-details child if desired to prevent text selection/interaction
+      .user-details {
+        pointer-events: none; // Fine to keep on text for non-interactivity
+      }
+    }
+
+    .menu-header, .notification-item, .menu-action-item, .logout-item, .view-all-notifications {
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.08) !important; // Subtle hover for dark mode
+      }
+    }
+    .menu-header {
+      background: linear-gradient(135deg, #1f1f1f 0%, #292929 100%) !important; // Darker gradient
+      border-bottom: 1px solid #3a3a3a !important;
+      h4 { color: white !important; }
+      .mark-all-read {
+        color: #a0a0a0 !important;
+        &:hover { background-color: rgba(255, 255, 255, 0.15) !important; color: white !important; }
+      }
+    }
+    .user-menu-header {
+      background: linear-gradient(135deg, #1f1f1f 0%, #292929 100%) !important;
+      border-bottom: 1px solid #3a3a3a !important;
+      h4 { color: white !important; }
+      p { color: #ccc !important; }
+      .user-status {
+        background-color: darken(#dcfdf7, 30%) !important; // Darken status badge
+        color: lighten(#065f46, 20%) !important;
+        &::before { background-color: $color-success !important; }
+      }
+    }
+    .notification-item {
+      &.unread {
+        background-color: #24243a !important; // Dark blue for unread
+        border-left-color: $color-primary !important;
+      }
+      .notification-icon {
+        background: #333 !important;
+        mat-icon { color: #bbb !important; }
+      }
+      .notification-title { color: white !important; }
+      .notification-text { color: #a0a0a0 !important; }
+      .notification-time { color: #888 !important; }
+    }
+    .menu-action-item {
+      color: #e0e0e0 !important;
+      mat-icon:first-child { color: #a0a0a0 !important; }
+      .chevron-icon { color: #888 !important; }
+      &:hover {
+        color: white !important;
+        mat-icon:first-child { color: lighten($color-primary, 10%) !important; }
+      }
+    }
+    .logout-item {
+      color: lighten(#dc2626, 15%) !important;
+      mat-icon { color: lighten(#dc2626, 15%) !important; }
+      border-top-color: #3a3a3a !important;
+      &:hover {
+        background-color: #4a1f1f !important; // Darker red hover
+        color: white !important;
+        mat-icon { color: white !important; }
+      }
+    }
+    mat-divider { border-top-color: #3a3a3a !important; }
+  }
+}

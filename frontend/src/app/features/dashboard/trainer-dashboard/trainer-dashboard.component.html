@@ -1,0 +1,192 @@
+<div class="trainer-dashboard">
+    <!-- Header Section -->
+    <div class="dashboard-header">
+        <div class="welcome-section">
+            <h1>Trainer Dashboard</h1>
+            <p *ngIf="currentUser$ | async as user">
+                Welcome, {{ user.firstName }} {{ user.lastName }}
+            </p>
+        </div>
+        <button mat-raised-button color="primary" (click)="refreshData()">
+            <mat-icon>refresh</mat-icon>
+            Refresh
+        </button>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div *ngIf="loading" class="loading-container">
+        <mat-spinner diameter="50"></mat-spinner>
+        <p>Loading your dashboard...</p>
+    </div>
+
+    <!-- Dashboard Content -->
+    <div *ngIf="!loading" class="dashboard-content">
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <mat-card class="stat-card trainees">
+                <mat-card-content>
+                    <div class="stat-content">
+                        <div class="stat-info">
+                            <h3>{{ dashboardData.assignedTrainees }}</h3>
+                            <p>Assigned Trainees</p>
+                        </div>
+                        <mat-icon>school</mat-icon>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+
+            <mat-card class="stat-card assessments">
+                <mat-card-content>
+                    <div class="stat-content">
+                        <div class="stat-info">
+                            <h3>{{ dashboardData.activeAssessments }}</h3>
+                            <p>Active Assessments</p>
+                        </div>
+                        <mat-icon>assignment</mat-icon>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+
+            <mat-card class="stat-card pending">
+                <mat-card-content>
+                    <div class="stat-content">
+                        <div class="stat-info">
+                            <h3>{{ dashboardData.pendingGrading }}</h3>
+                            <p>Pending Grading</p>
+                        </div>
+                        <mat-icon>grade</mat-icon>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+
+            <mat-card class="stat-card completed">
+                <mat-card-content>
+                    <div class="stat-content">
+                        <div class="stat-info">
+                            <h3>{{ dashboardData.completedAssessments }}</h3>
+                            <p>Completed This Month</p>
+                        </div>
+                        <mat-icon>done_all</mat-icon>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+
+        <!-- Main Content Row -->
+        <div class="content-row">
+            <!-- Upcoming Classes -->
+            <mat-card class="upcoming-classes-card">
+                <mat-card-header>
+                    <mat-card-title>Upcoming Classes</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="classes-list">
+                        <div *ngFor="let class of dashboardData.upcomingClasses" class="class-item">
+                            <div class="class-info">
+                                <h4>{{ class.moduleName }}</h4>
+                                <p>{{ class.className }}</p>
+                                <span class="class-time">{{ class.startTime | date:'medium' }}</span>
+                            </div>
+                            <div class="class-actions">
+                                <button mat-icon-button color="primary" [routerLink]="['/classes', class.id]">
+                                    <mat-icon>open_in_new</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div *ngIf="dashboardData.upcomingClasses.length === 0" class="no-classes">
+                            <mat-icon>event</mat-icon>
+                            <p>No upcoming classes scheduled</p>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+
+            <!-- Recent Submissions -->
+            <mat-card class="submissions-card">
+                <mat-card-header>
+                    <mat-card-title>Recent Submissions</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="submissions-list">
+                        <div *ngFor="let submission of dashboardData.recentSubmissions" class="submission-item">
+                            <div class="submission-info">
+                                <h4>{{ submission.assessmentTitle }}</h4>
+                                <p>{{ submission.studentName }}</p>
+                                <span class="submission-time">{{ submission.submittedAt | date:'short' }}</span>
+                            </div>
+                            <div class="submission-status">
+                                <mat-chip [color]="submission.status === 'PENDING' ? 'warn' : 'primary'" selected>
+                                    {{ submission.status }}
+                                </mat-chip>
+                            </div>
+                        </div>
+
+                        <div *ngIf="dashboardData.recentSubmissions.length === 0" class="no-submissions">
+                            <mat-icon>assignment</mat-icon>
+                            <p>No recent submissions</p>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+
+        <!-- My Modules -->
+        <mat-card class="modules-card">
+            <mat-card-header>
+                <mat-card-title>My Modules</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="modules-grid">
+                    <div *ngFor="let module of dashboardData.myModules" class="module-item"
+                        [routerLink]="['/modules', module.id]">
+                        <div class="module-header">
+                            <h3>{{ module.name }}</h3>
+                            <mat-chip [color]="'primary'" selected>{{ module.type }}</mat-chip>
+                        </div>
+                        <p>{{ module.description }}</p>
+                        <div class="module-stats">
+                            <span>{{ module.enrolledStudents }} Students</span>
+                            <span>{{ module.completionRate }}% Completion</span>
+                        </div>
+                    </div>
+
+                    <div *ngIf="dashboardData.myModules.length === 0" class="no-modules">
+                        <mat-icon>book</mat-icon>
+                        <p>No modules assigned</p>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <!-- Quick Actions -->
+        <mat-card class="quick-actions-card">
+            <mat-card-header>
+                <mat-card-title>Quick Actions</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="quick-actions">
+                    <button mat-raised-button color="primary" routerLink="/assessments/new">
+                        <mat-icon>add</mat-icon>
+                        Create Assessment
+                    </button>
+
+                    <button mat-raised-button color="primary" routerLink="/training/trainees">
+                        <mat-icon>people</mat-icon>
+                        View My Trainees
+                    </button>
+
+                    <button mat-raised-button color="accent" routerLink="/assessments/grading">
+                        <mat-icon>grade</mat-icon>
+                        Grade Submissions
+                    </button>
+
+                    <button mat-raised-button color="accent" routerLink="/evidence">
+                        <mat-icon>folder</mat-icon>
+                        Review Evidence
+                    </button>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

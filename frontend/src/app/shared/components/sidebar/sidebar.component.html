@@ -1,0 +1,69 @@
+<div class="sidebar-container">
+  <div class="sidebar-header">
+    <h3 class="sidebar-title">Navigation</h3>
+  </div>
+  
+  <mat-nav-list class="sidebar-nav">
+    <ng-container *ngFor="let item of menuItems; trackBy: trackByFn; let i = index">
+      <div *ngIf="hasAccess(item)" class="menu-item-wrapper">
+        
+        <!-- Single Menu Item -->
+        <a *ngIf="item.route && !item.children" 
+           mat-list-item 
+           [routerLink]="item.route" 
+           routerLinkActive="active"
+           class="nav-item single-item">
+          <div class="nav-item-content">
+            <mat-icon class="nav-icon">{{ item.icon }}</mat-icon>
+            <span class="nav-label">{{ item.label }}</span>
+          </div>
+          <div class="active-indicator"></div>
+        </a>
+
+        <!-- Expandable Menu Item -->
+        <div *ngIf="item.children" class="expandable-menu-wrapper">
+          <mat-expansion-panel 
+            class="menu-expansion-panel"
+            [expanded]="isExpanded(item)"
+            (expandedChange)="toggleExpansion(item, $event)"
+            hideToggle="true">
+            
+            <mat-expansion-panel-header class="expansion-header">
+              <mat-panel-title class="panel-title">
+                <div class="nav-item-content">
+                  <mat-icon class="nav-icon">{{ item.icon }}</mat-icon>
+                  <span class="nav-label">{{ item.label }}</span>
+                </div>
+                <mat-icon class="custom-caret" [class.expanded]="isExpanded(item)">
+                  keyboard_arrow_down
+                </mat-icon>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <div class="children-container">
+              <ng-container *ngFor="let child of item.children; trackBy: trackByFn">
+                <a *ngIf="hasAccess(child)" 
+                   mat-list-item 
+                   [routerLink]="child.route" 
+                   routerLinkActive="active"
+                   class="nav-item child-item">
+                  <div class="nav-item-content">
+                    <div class="child-connector"></div>
+                    <mat-icon class="nav-icon child-icon">{{ child.icon }}</mat-icon>
+                    <span class="nav-label">{{ child.label }}</span>
+                  </div>
+                  <div class="active-indicator"></div>
+                </a>
+              </ng-container>
+            </div>
+          </mat-expansion-panel>
+        </div>
+
+        <!-- Professional Divider -->
+        <div *ngIf="shouldShowDivider(i)" class="menu-divider">
+          <div class="divider-line"></div>
+        </div>
+      </div>
+    </ng-container>
+  </mat-nav-list>
+</div>

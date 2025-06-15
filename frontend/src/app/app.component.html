@@ -1,0 +1,34 @@
+<div class="app-container" *ngIf="authService.isAuthenticated$ | async; else authTemplate">
+  <!-- Header - Outside drawer container for proper positioning -->
+  <app-header (menuToggle)="onMenuToggle()"></app-header>
+  
+  <!-- Main container with drawer -->
+  <mat-drawer-container 
+    [class]="mainContainerClasses"
+    [hasBackdrop]="hasBackdrop"
+    (backdropClick)="onBackdropClick()">
+    
+    <mat-drawer 
+      #sidenav 
+      [mode]="sidenavMode" 
+      [opened]="shouldSidenavBeOpened"
+      class="app-drawer"
+      (opened)="onSidenavOpened()"
+      (closed)="onSidenavClosed()">
+      <app-sidebar></app-sidebar>
+    </mat-drawer>
+    
+    <mat-drawer-content class="main-content">
+      <router-outlet></router-outlet>
+    </mat-drawer-content>
+  </mat-drawer-container>
+  
+  <!-- Global Loading Spinner -->
+  <div *ngIf="loadingService.loading$ | async" class="global-loading">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+</div>
+
+<ng-template #authTemplate>
+  <router-outlet></router-outlet>
+</ng-template>

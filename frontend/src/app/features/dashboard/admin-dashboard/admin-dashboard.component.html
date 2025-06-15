@@ -1,0 +1,189 @@
+<div class="admin-dashboard">
+    <!-- Header Section -->
+    <div class="dashboard-header">
+        <div class="welcome-section">
+            <h1>Admin Dashboard</h1>
+            <p *ngIf="currentUser$ | async as user">
+                Welcome back, {{ user.firstName }} {{ user.lastName }}
+            </p>
+        </div>
+        <button mat-raised-button color="primary" (click)="refreshData()">
+            <mat-icon>refresh</mat-icon>
+            Refresh
+        </button>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div *ngIf="loading" class="loading-container">
+        <mat-spinner diameter="50"></mat-spinner>
+        <p>Loading dashboard data...</p>
+    </div>
+
+    <!-- Dashboard Content -->
+    <div *ngIf="!loading" class="dashboard-content">
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <mat-card class="stat-card users">
+                <mat-card-content>
+                    <div class="stat-content">
+                        <div class="stat-info">
+                            <h3>{{ stats.totalUsers }}</h3>
+                            <p>Total Users</p>
+                        </div>
+                        <mat-icon>people</mat-icon>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+
+            <mat-card class="stat-card trainees">
+                <mat-card-content>
+                    <div class="stat-content">
+                        <div class="stat-info">
+                            <h3>{{ stats.totalTrainees }}</h3>
+                            <p>Active Trainees</p>
+                        </div>
+                        <mat-icon>school</mat-icon>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+
+            <mat-card class="stat-card trainers">
+                <mat-card-content>
+                    <div class="stat-content">
+                        <div class="stat-info">
+                            <h3>{{ stats.totalTrainers }}</h3>
+                            <p>Active Trainers</p>
+                        </div>
+                        <mat-icon>person</mat-icon>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+
+            <mat-card class="stat-card courses">
+                <mat-card-content>
+                    <div class="stat-content">
+                        <div class="stat-info">
+                            <h3>{{ stats.totalCourses }}</h3>
+                            <p>Total Courses</p>
+                        </div>
+                        <mat-icon>book</mat-icon>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+
+            <mat-card class="stat-card assessments">
+                <mat-card-content>
+                    <div class="stat-content">
+                        <div class="stat-info">
+                            <h3>{{ stats.totalAssessments }}</h3>
+                            <p>Total Assessments</p>
+                        </div>
+                        <mat-icon>assignment</mat-icon>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+
+            <mat-card class="stat-card pending">
+                <mat-card-content>
+                    <div class="stat-content">
+                        <div class="stat-info">
+                            <h3>{{ stats.pendingAssessments }}</h3>
+                            <p>Pending Assessments</p>
+                        </div>
+                        <mat-icon>pending</mat-icon>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+
+        <!-- Charts and Recent Activity Row -->
+        <div class="charts-row">
+            <!-- Assessment Analytics Chart -->
+            <mat-card class="chart-card">
+                <mat-card-header>
+                    <mat-card-title>Assessment Analytics</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="chart-container">
+                        <!-- Replace with actual chart library implementation -->
+                        <div class="placeholder-chart">
+                            <p>Assessment completion trends will be displayed here</p>
+                            <div class="chart-data">
+                                <div *ngFor="let item of assessmentChartData" class="chart-item">
+                                    {{ item.name }}: {{ item.value }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+
+            <!-- Recent Activities -->
+            <mat-card class="activity-card">
+                <mat-card-header>
+                    <mat-card-title>Recent Activities</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="activities-list">
+                        <div *ngFor="let activity of recentActivities" class="activity-item">
+                            <div class="activity-icon">
+                                <mat-icon [color]="getActivityColor(activity.type)">
+                                    {{ getActivityIcon(activity.type) }}
+                                </mat-icon>
+                            </div>
+                            <div class="activity-content">
+                                <p class="activity-description">{{ activity.description }}</p>
+                                <span class="activity-time">{{ activity.timestamp | date:'short' }}</span>
+                            </div>
+                        </div>
+
+                        <div *ngIf="recentActivities.length === 0" class="no-activities">
+                            <mat-icon>info</mat-icon>
+                            <p>No recent activities</p>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+
+        <!-- Quick Actions -->
+        <mat-card class="quick-actions-card">
+            <mat-card-header>
+                <mat-card-title>Quick Actions</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="quick-actions">
+                    <button mat-raised-button color="primary" routerLink="/users/new">
+                        <mat-icon>person_add</mat-icon>
+                        Add User
+                    </button>
+
+                    <button mat-raised-button color="primary" routerLink="/courses/new">
+                        <mat-icon>add</mat-icon>
+                        Create Course
+                    </button>
+
+                    <button mat-raised-button color="primary" routerLink="/assessments/new">
+                        <mat-icon>assignment</mat-icon>
+                        New Assessment
+                    </button>
+
+                    <button mat-raised-button color="primary" routerLink="/academic-years/new">
+                        <mat-icon>calendar_today</mat-icon>
+                        New Academic Year
+                    </button>
+
+                    <button mat-raised-button color="accent" routerLink="/users">
+                        <mat-icon>people</mat-icon>
+                        Manage Users
+                    </button>
+
+                    <button mat-raised-button color="accent" routerLink="/training/trainees">
+                        <mat-icon>school</mat-icon>
+                        View Trainees
+                    </button>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

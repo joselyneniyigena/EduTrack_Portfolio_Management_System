@@ -1,0 +1,443 @@
+<!-- trade-management/trade-management.component.html -->
+<div class="trade-management-container">
+  <!-- Header -->
+  <div class="header">
+    <h1>Trade Management System</h1>
+    <p>Manage Sectors, Trades, and RTQF Levels</p>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" *ngIf="isLoading">
+    <mat-spinner></mat-spinner>
+    <p>Loading...</p>
+  </div>
+
+  <!-- Main Content -->
+  <mat-tab-group [(selectedIndex)]="activeTab" (selectedIndexChange)="onTabChange($event)">
+    
+    <!-- Sectors Tab -->
+    <mat-tab label="Sectors">
+      <div class="tab-content">
+        <div class="content-layout">
+          
+          <!-- Sectors Form -->
+          <mat-card class="form-card">
+            <mat-card-header>
+              <mat-card-title>
+                {{ editMode ? 'Edit Sector' : 'Add New Sector' }}
+              </mat-card-title>
+            </mat-card-header>
+            
+            <mat-card-content>
+              <form [formGroup]="sectorForm" (ngSubmit)="onSectorSubmit()">
+                <div class="form-row">
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Name</mat-label>
+                    <input matInput formControlName="name" placeholder="Enter sector name">
+                    <mat-error *ngIf="sectorForm.get('name')?.hasError('required')">
+                      Name is required
+                    </mat-error>
+                    <mat-error *ngIf="sectorForm.get('name')?.hasError('maxlength')">
+                      Name cannot exceed 100 characters
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="form-row">
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Abbreviation</mat-label>
+                    <input matInput formControlName="abbreviation" placeholder="Enter abbreviation">
+                    <mat-error *ngIf="sectorForm.get('abbreviation')?.hasError('required')">
+                      Abbreviation is required
+                    </mat-error>
+                    <mat-error *ngIf="sectorForm.get('abbreviation')?.hasError('maxlength')">
+                      Abbreviation cannot exceed 10 characters
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="form-row">
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>RTQF Level</mat-label>
+                    <mat-select formControlName="rtqfLevelId">
+                      <mat-option *ngFor="let level of rtqfLevels" [value]="level.id">
+                        {{ level.name }}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="sectorForm.get('rtqfLevelId')?.hasError('required')">
+                      RTQF Level is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="form-row">
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Description</mat-label>
+                    <textarea matInput formControlName="description" placeholder="Enter description" rows="3"></textarea>
+                    <mat-error *ngIf="sectorForm.get('description')?.hasError('required')">
+                      Description is required
+                    </mat-error>
+                    <mat-error *ngIf="sectorForm.get('description')?.hasError('maxlength')">
+                      Description cannot exceed 500 characters
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="form-actions">
+                  <button mat-raised-button color="primary" type="submit" [disabled]="!sectorForm.valid || isLoading">
+                    <mat-icon>{{ editMode ? 'save' : 'add' }}</mat-icon>
+                    {{ editMode ? 'Update Sector' : 'Create Sector' }}
+                  </button>
+                  <button mat-button type="button" (click)="resetForm('sector')" [disabled]="isLoading">
+                    <mat-icon>clear</mat-icon>
+                    Reset
+                  </button>
+                </div>
+              </form>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Sectors Table -->
+          <mat-card class="table-card">
+            <mat-card-header>
+              <mat-card-title>Sectors List</mat-card-title>
+              <div class="spacer"></div>
+              <mat-form-field appearance="outline" class="search-field">
+                <mat-label>Search Sectors</mat-label>
+                <input matInput (keyup)="applyFilter($event, sectorDataSource)" placeholder="Search...">
+                <mat-icon matSuffix>search</mat-icon>
+              </mat-form-field>
+            </mat-card-header>
+
+            <mat-card-content>
+              <div class="table-container">
+                <table mat-table [dataSource]="sectorDataSource" matSort class="full-width-table">
+                  
+                  <ng-container matColumnDef="id">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+                    <td mat-cell *matCellDef="let sector">{{ sector.id }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                    <td mat-cell *matCellDef="let sector">{{ sector.name }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="abbreviation">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Abbreviation</th>
+                    <td mat-cell *matCellDef="let sector">
+                      <mat-chip>{{ sector.abbreviation }}</mat-chip>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="description">
+                    <th mat-header-cell *matHeaderCellDef>Description</th>
+                    <td mat-cell *matCellDef="let sector" class="description-cell">
+                      {{ sector.description }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="rtqfLevel">
+                    <th mat-header-cell *matHeaderCellDef>RTQF Level</th>
+                    <td mat-cell *matCellDef="let sector">
+                      <mat-chip color="accent">{{ sector.rtqfLevel?.name || 'N/A' }}</mat-chip>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef>Actions</th>
+                    <td mat-cell *matCellDef="let sector">
+                      <button mat-icon-button color="primary" (click)="editSector(sector)" [disabled]="isLoading" matTooltip="Edit Sector">
+                        <mat-icon>edit</mat-icon>
+                      </button>
+                      <button mat-icon-button color="warn" (click)="deleteSector(sector)" [disabled]="isLoading" matTooltip="Delete Sector">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="sectorColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: sectorColumns;"></tr>
+                </table>
+
+                <mat-paginator #sectorPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+                </mat-paginator>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Trades Tab -->
+    <mat-tab label="Trades">
+      <div class="tab-content">
+        <div class="content-layout">
+          
+          <!-- Trades Form -->
+          <mat-card class="form-card">
+            <mat-card-header>
+              <mat-card-title>
+                {{ editMode ? 'Edit Trade' : 'Add New Trade' }}
+              </mat-card-title>
+            </mat-card-header>
+            
+            <mat-card-content>
+              <form [formGroup]="tradeForm" (ngSubmit)="onTradeSubmit()">
+                <div class="form-row">
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Name</mat-label>
+                    <input matInput formControlName="name" placeholder="Enter trade name">
+                    <mat-error *ngIf="tradeForm.get('name')?.hasError('required')">
+                      Name is required
+                    </mat-error>
+                    <mat-error *ngIf="tradeForm.get('name')?.hasError('maxlength')">
+                      Name cannot exceed 100 characters
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="form-row">
+                  <mat-form-field appearance="outline" class="half-width">
+                    <mat-label>Abbreviation</mat-label>
+                    <input matInput formControlName="abbreviation" placeholder="Enter abbreviation">
+                    <mat-error *ngIf="tradeForm.get('abbreviation')?.hasError('required')">
+                      Abbreviation is required
+                    </mat-error>
+                    <mat-error *ngIf="tradeForm.get('abbreviation')?.hasError('maxlength')">
+                      Abbreviation cannot exceed 10 characters
+                    </mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="half-width">
+                    <mat-label>Sector</mat-label>
+                    <mat-select formControlName="sectorId">
+                      <mat-option *ngFor="let sector of sectors" [value]="sector.id">
+                        {{ sector.name }}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="tradeForm.get('sectorId')?.hasError('required')">
+                      Sector is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="form-row">
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Description</mat-label>
+                    <textarea matInput formControlName="description" placeholder="Enter description" rows="3"></textarea>
+                    <mat-error *ngIf="tradeForm.get('description')?.hasError('required')">
+                      Description is required
+                    </mat-error>
+                    <mat-error *ngIf="tradeForm.get('description')?.hasError('maxlength')">
+                      Description cannot exceed 500 characters
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="form-actions">
+                  <button mat-raised-button color="primary" type="submit" [disabled]="!tradeForm.valid || isLoading">
+                    <mat-icon>{{ editMode ? 'save' : 'add' }}</mat-icon>
+                    {{ editMode ? 'Update Trade' : 'Create Trade' }}
+                  </button>
+                  <button mat-button type="button" (click)="resetForm('trade')" [disabled]="isLoading">
+                    <mat-icon>clear</mat-icon>
+                    Reset
+                  </button>
+                </div>
+              </form>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Trades Table -->
+          <mat-card class="table-card">
+            <mat-card-header>
+              <mat-card-title>Trades List</mat-card-title>
+              <div class="spacer"></div>
+              <mat-form-field appearance="outline" class="search-field">
+                <mat-label>Search Trades</mat-label>
+                <input matInput (keyup)="applyFilter($event, tradeDataSource)" placeholder="Search...">
+                <mat-icon matSuffix>search</mat-icon>
+              </mat-form-field>
+            </mat-card-header>
+
+            <mat-card-content>
+              <div class="table-container">
+                <table mat-table [dataSource]="tradeDataSource" matSort class="full-width-table">
+                  
+                  <ng-container matColumnDef="id">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+                    <td mat-cell *matCellDef="let trade">{{ trade.id }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                    <td mat-cell *matCellDef="let trade">{{ trade.name }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="abbreviation">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Abbreviation</th>
+                    <td mat-cell *matCellDef="let trade">
+                      <mat-chip>{{ trade.abbreviation }}</mat-chip>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="description">
+                    <th mat-header-cell *matHeaderCellDef>Description</th>
+                    <td mat-cell *matCellDef="let trade" class="description-cell">
+                      {{ trade.description }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="sector">
+                    <th mat-header-cell *matHeaderCellDef>Sector</th>
+                    <td mat-cell *matCellDef="let trade">
+                      <mat-chip color="primary">{{ trade.sector?.name || 'N/A' }}</mat-chip>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef>Actions</th>
+                    <td mat-cell *matCellDef="let trade">
+                      <button mat-icon-button color="primary" (click)="editTrade(trade)" [disabled]="isLoading" matTooltip="Edit Trade">
+                        <mat-icon>edit</mat-icon>
+                      </button>
+                      <button mat-icon-button color="warn" (click)="deleteTrade(trade)" [disabled]="isLoading" matTooltip="Delete Trade">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="tradeColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: tradeColumns;"></tr>
+                </table>
+
+                <mat-paginator #tradePaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+                </mat-paginator>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- RTQF Levels Tab -->
+    <mat-tab label="RTQF Levels">
+      <div class="tab-content">
+        <div class="content-layout">
+          
+          <!-- RTQF Form -->
+          <mat-card class="form-card">
+            <mat-card-header>
+              <mat-card-title>
+                {{ editMode ? 'Edit RTQF Level' : 'Add New RTQF Level' }}
+              </mat-card-title>
+            </mat-card-header>
+            
+            <mat-card-content>
+              <form [formGroup]="rtqfForm" (ngSubmit)="onRTQFSubmit()">
+                <div class="form-row">
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Name</mat-label>
+                    <input matInput formControlName="name" placeholder="Enter RTQF level name">
+                    <mat-error *ngIf="rtqfForm.get('name')?.hasError('required')">
+                      Name is required
+                    </mat-error>
+                    <mat-error *ngIf="rtqfForm.get('name')?.hasError('maxlength')">
+                      Name cannot exceed 100 characters
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="form-row">
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Description</mat-label>
+                    <textarea matInput formControlName="description" placeholder="Enter description" rows="4"></textarea>
+                    <mat-error *ngIf="rtqfForm.get('description')?.hasError('required')">
+                      Description is required
+                    </mat-error>
+                    <mat-error *ngIf="rtqfForm.get('description')?.hasError('maxlength')">
+                      Description cannot exceed 500 characters
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="form-actions">
+                  <button mat-raised-button color="primary" type="submit" [disabled]="!rtqfForm.valid || isLoading">
+                    <mat-icon>{{ editMode ? 'save' : 'add' }}</mat-icon>
+                    {{ editMode ? 'Update RTQF Level' : 'Create RTQF Level' }}
+                  </button>
+                  <button mat-button type="button" (click)="resetForm('rtqf')" [disabled]="isLoading">
+                    <mat-icon>clear</mat-icon>
+                    Reset
+                  </button>
+                </div>
+              </form>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- RTQF Levels Table -->
+          <mat-card class="table-card">
+            <mat-card-header>
+              <mat-card-title>RTQF Levels List</mat-card-title>
+              <div class="spacer"></div>
+              <mat-form-field appearance="outline" class="search-field">
+                <mat-label>Search RTQF Levels</mat-label>
+                <input matInput (keyup)="applyFilter($event, rtqfDataSource)" placeholder="Search...">
+                <mat-icon matSuffix>search</mat-icon>
+              </mat-form-field>
+            </mat-card-header>
+
+            <mat-card-content>
+              <div class="table-container">
+                <table mat-table [dataSource]="rtqfDataSource" matSort class="full-width-table">
+                  
+                  <ng-container matColumnDef="id">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+                    <td mat-cell *matCellDef="let level">{{ level.id }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                    <td mat-cell *matCellDef="let level">
+                      <strong>{{ level.name }}</strong>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="description">
+                    <th mat-header-cell *matHeaderCellDef>Description</th>
+                    <td mat-cell *matCellDef="let level" class="description-cell">
+                      {{ level.description }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef>Actions</th>
+                    <td mat-cell *matCellDef="let level">
+                      <button mat-icon-button color="primary" (click)="editRTQFLevel(level)" [disabled]="isLoading" matTooltip="Edit RTQF Level">
+                        <mat-icon>edit</mat-icon>
+                      </button>
+                      <button mat-icon-button color="warn" (click)="deleteRTQFLevel(level)" [disabled]="isLoading" matTooltip="Delete RTQF Level">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="rtqfColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: rtqfColumns;"></tr>
+                </table>
+
+                <mat-paginator #rtqfPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+                </mat-paginator>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+        </div>
+      </div>
+    </mat-tab>
+
+  </mat-tab-group>
+</div>

@@ -26,6 +26,6 @@ public class Trainer {
     private String gender;
     private String maritalStatus;
     private String email;
-    private String phoneNbr;
+    private String phoneNumber;
     private String address;
 }

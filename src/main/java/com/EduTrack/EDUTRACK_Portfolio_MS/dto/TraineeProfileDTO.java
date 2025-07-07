@@ -1,6 +1,8 @@
-package com.EduTrack.EDUTRACK_Portfolio_MS.model;
+package com.EduTrack.EDUTRACK_Portfolio_MS.dto;
 
-import jakarta.persistence.*;
+import com.EduTrack.EDUTRACK_Portfolio_MS.model.RTQFLevel;
+import com.EduTrack.EDUTRACK_Portfolio_MS.model.Sector;
+import com.EduTrack.EDUTRACK_Portfolio_MS.model.Trade;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,37 +10,27 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Trainee {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(unique = true)
-    private String traineeId;
+public class TraineeProfileDTO {
+    private long id;
     private String firstName;
     private String lastName;
-    private LocalDate dob;
-    private String gender;
-    private String maritalStatus;
     private String email;
     private String phoneNumber;
     private String address;
-
-    @Lob
+    private String traineeId;
+    private LocalDate dob;
+    private String gender;
+    private String maritalStatus;
+    private RTQFLevel level;
+    private Sector sector;
+    private Trade trade;
     private String professionalBackground;
-
-    @Lob
     private String previousExperience;
-
-    @Lob
     private String qualifications;
-
     private String emergencyContactName;
     private String emergencyContactPhone;
     private String nationality;

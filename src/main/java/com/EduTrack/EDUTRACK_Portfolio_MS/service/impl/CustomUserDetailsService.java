@@ -19,7 +19,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -47,7 +48,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username)
+        return userRepository.findByUsernameIgnoreCase(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found"));
     }
 
@@ -92,7 +93,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     public AuthResponse signIn(JwtRequest jwtRequest) throws Exception {
         String username = jwtRequest.getUsername().toLowerCase();
-        User user = userRepository.findByUsername(username)
+        User user = userRepository.findByUsernameIgnoreCase(username)
                 .orElseThrow(() -> new Exception("Invalid credentials"));
 
         if (!user.isEnabled()) {

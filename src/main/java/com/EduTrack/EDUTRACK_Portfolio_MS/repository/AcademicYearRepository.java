@@ -8,4 +8,5 @@ import java.util.Optional;
 
 public interface AcademicYearRepository extends JpaRepository<AcademicYear, Long> {
     Optional<AcademicYear> findByStartDateBeforeAndEndDateAfter(LocalDate today1, LocalDate today2);
+    Optional<AcademicYear> findByStatus(AcademicYear.AcademicYearStatus status);
 }

@@ -1,10 +1,10 @@
 package com.EduTrack.EDUTRACK_Portfolio_MS.service.impl;
 
-import com.EduTrack.EDUTRACK_Portfolio_MS.model.User;
 import com.EduTrack.EDUTRACK_Portfolio_MS.model.Role;
+import com.EduTrack.EDUTRACK_Portfolio_MS.model.User;
 import com.EduTrack.EDUTRACK_Portfolio_MS.model.UserRole;
-import com.EduTrack.EDUTRACK_Portfolio_MS.repository.UserRepository;
 import com.EduTrack.EDUTRACK_Portfolio_MS.repository.RoleRepository;
+import com.EduTrack.EDUTRACK_Portfolio_MS.repository.UserRepository;
 import com.EduTrack.EDUTRACK_Portfolio_MS.repository.UserRoleRepository;
 import com.EduTrack.EDUTRACK_Portfolio_MS.service.UserRoleService;
 import jakarta.persistence.EntityNotFoundException;

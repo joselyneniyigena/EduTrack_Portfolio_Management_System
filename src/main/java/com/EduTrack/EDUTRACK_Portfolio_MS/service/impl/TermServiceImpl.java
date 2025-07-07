@@ -22,6 +22,8 @@ public class TermServiceImpl implements TermService {
 
     @Override
     public Term createTerm(Term term) {
+        AcademicYear academicYear = academicYearRepository.findById(term.getAcademicYearId()).orElseThrow(EntityNotFoundException::new);
+        term.setAcademicYear(academicYear);
         return termRepository.save(term);
     }
 
@@ -29,16 +31,11 @@ public class TermServiceImpl implements TermService {
     public Term updateTerm(Long id, Term updatedTerm) {
         Term existing = termRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Term not found with ID: " + id));
-
+        AcademicYear academicYear = academicYearRepository.findById(updatedTerm.getAcademicYearId()).orElseThrow(EntityNotFoundException::new);
+        existing.setAcademicYear(academicYear);
         existing.setStartDate(updatedTerm.getStartDate());
         existing.setEndDate(updatedTerm.getEndDate());
         existing.setStatus(updatedTerm.getStatus());
-
-        if (updatedTerm.getAcademicYear() != null) {
-            AcademicYear ay = academicYearRepository.findById(updatedTerm.getAcademicYear().getId())
-                    .orElseThrow(() -> new EntityNotFoundException("Academic Year not found"));
-            existing.setAcademicYear(ay);
-        }
 
         return termRepository.save(existing);
     }

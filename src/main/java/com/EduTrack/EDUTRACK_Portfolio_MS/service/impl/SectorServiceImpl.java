@@ -18,9 +18,14 @@ public class SectorServiceImpl implements SectorService {
 
     private final SectorRepository sectorRepository;
     private final RTQFLevelRepository rtqfLevelRepository;
+
     @Override
     public Sector createSector(Sector sector) {
-        return sectorRepository.save(sector);
+        return rtqfLevelRepository.findById(sector.getRtqfLevelId())
+                .map(level -> {
+                    sector.setRtqfLevel(level);
+                    return sectorRepository.save(sector);
+                }).orElseThrow(EntityNotFoundException::new);
     }
 
     @Override
@@ -32,11 +37,10 @@ public class SectorServiceImpl implements SectorService {
         existing.setDescription(updatedSector.getDescription());
         existing.setAbbreviation(updatedSector.getAbbreviation());
 
-        if (updatedSector.getRtqfLevel() != null) {
-            RTQFLevel rtqfLevel = rtqfLevelRepository.findById(updatedSector.getRtqfLevel().getId())
-                    .orElseThrow(() -> new EntityNotFoundException("RTQF Level not found"));
-            existing.setRtqfLevel(rtqfLevel);
-        }
+        RTQFLevel rtqfLevel = rtqfLevelRepository.findById(updatedSector.getRtqfLevelId())
+                .orElseThrow(() -> new EntityNotFoundException("RTQF Level not found"));
+        existing.setRtqfLevel(rtqfLevel);
+
 
         return sectorRepository.save(existing);
     }

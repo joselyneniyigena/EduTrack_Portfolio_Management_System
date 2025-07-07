@@ -22,7 +22,11 @@ public class TradeServiceImpl implements TradeService {
 
     @Override
     public Trade createTrade(Trade trade) {
-        return tradeRepository.save(trade);
+        return sectorRepository.findById(trade.getSectorId())
+                .map(sector -> {
+                    trade.setSector(sector);
+                    return tradeRepository.save(trade);
+                }).orElseThrow(EntityNotFoundException::new);
     }
 
     @Override
@@ -34,11 +38,9 @@ public class TradeServiceImpl implements TradeService {
         existing.setDescription(updatedTrade.getDescription());
         existing.setAbbreviation(updatedTrade.getAbbreviation());
 
-        if (updatedTrade.getSector() != null) {
-            Sector sector = sectorRepository.findById(updatedTrade.getSector().getId())
-                    .orElseThrow(() -> new EntityNotFoundException("Sector not found"));
-            existing.setSector(sector);
-        }
+        Sector sector = sectorRepository.findById(updatedTrade.getSectorId())
+                .orElseThrow(() -> new EntityNotFoundException("Sector not found"));
+        existing.setSector(sector);
 
         return tradeRepository.save(existing);
     }

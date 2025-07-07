@@ -53,7 +53,7 @@ public class UserServiceImpl implements AppUserService {
 
     @Override
     public Optional<User> findByUsername(String username) {
-        return userRepository.findByUsername(username);
+        return userRepository.findByUsernameIgnoreCase(username);
     }
 
     @Override

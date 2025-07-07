@@ -33,7 +33,7 @@ public class TrainerServiceImpl implements TrainerService {
         existing.setGender(updatedTrainer.getGender());
         existing.setMaritalStatus(updatedTrainer.getMaritalStatus());
         existing.setEmail(updatedTrainer.getEmail());
-        existing.setPhoneNbr(updatedTrainer.getPhoneNbr());
+        existing.setPhoneNumber(updatedTrainer.getPhoneNumber());
         existing.setAddress(updatedTrainer.getAddress());
 
         return trainerRepository.save(existing);

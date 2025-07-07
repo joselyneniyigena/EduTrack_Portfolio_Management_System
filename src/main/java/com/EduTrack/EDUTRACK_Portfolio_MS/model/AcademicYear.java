@@ -25,7 +25,7 @@ public class AcademicYear {
     private AcademicYearStatus status;
 
     public enum AcademicYearStatus {
-        ACTIVE, CLOSED, PLANNED
+        ACTIVE, CLOSED, PLANNED, INACTIVE, COMPLETED, SUSPENDED
     }
 
 }

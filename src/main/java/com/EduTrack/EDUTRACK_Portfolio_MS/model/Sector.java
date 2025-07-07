@@ -22,4 +22,7 @@ public class Sector {
     @ManyToOne
     @JoinColumn(name = "rtqf_level_id")
     private RTQFLevel rtqfLevel;
+
+    @Transient
+    private long rtqfLevelId;
 }

@@ -23,4 +23,7 @@ public class Trade {
     @ManyToOne
     @JoinColumn(name = "sector_id")
     private Sector sector;
+
+    @Transient
+    private long sectorId;
 }

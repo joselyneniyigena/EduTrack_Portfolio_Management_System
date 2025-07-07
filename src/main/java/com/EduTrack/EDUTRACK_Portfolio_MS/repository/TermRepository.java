@@ -10,5 +10,6 @@ import java.util.Optional;
 
 public interface TermRepository extends JpaRepository<Term, Long> {
     List<Term> findByAcademicYear(AcademicYear academicYear);
+    Optional<Term> findByAcademicYearAndStatus(AcademicYear academicYear, String status);
     Optional<Term> findByStartDateBeforeAndEndDateAfter(LocalDate start, LocalDate end);
 }

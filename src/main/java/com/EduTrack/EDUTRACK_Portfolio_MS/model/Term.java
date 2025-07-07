@@ -24,5 +24,8 @@ public class Term {
     @JoinColumn(name = "academic_year_id")
     private AcademicYear academicYear;
 
+    @Transient
+    private long academicYearId;
+
     private String status;
 }

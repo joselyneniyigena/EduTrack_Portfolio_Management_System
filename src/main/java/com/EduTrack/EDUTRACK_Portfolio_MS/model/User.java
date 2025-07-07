@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.CollectionUtils;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity

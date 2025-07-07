@@ -1,5 +1,6 @@
 package com.EduTrack.EDUTRACK_Portfolio_MS.controller;
 
+import com.EduTrack.EDUTRACK_Portfolio_MS.dto.TraineeProfileDTO;
 import com.EduTrack.EDUTRACK_Portfolio_MS.model.Trainee;
 import com.EduTrack.EDUTRACK_Portfolio_MS.service.TraineeService;
 import lombok.RequiredArgsConstructor;
@@ -17,12 +18,12 @@ public class TraineeController {
     private final TraineeService traineeService;
 
     @PostMapping
-    public ResponseEntity<Trainee> create(@RequestBody Trainee trainee) {
+    public ResponseEntity<Trainee> create(@RequestBody TraineeProfileDTO trainee) throws Exception {
         return ResponseEntity.ok(traineeService.createTrainee(trainee));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Trainee> update(@PathVariable Long id, @RequestBody Trainee trainee) {
+    public ResponseEntity<Trainee> update(@PathVariable Long id, @RequestBody TraineeProfileDTO trainee) {
         return ResponseEntity.ok(traineeService.updateTrainee(id, trainee));
     }
 
@@ -33,21 +34,26 @@ public class TraineeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Trainee>> getAll() {
+    public ResponseEntity<List<TraineeProfileDTO>> getAll() {
         return ResponseEntity.ok(traineeService.getAllTrainees());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Trainee> getById(@PathVariable Long id) {
+    public ResponseEntity<TraineeProfileDTO> getById(@PathVariable Long id) {
         return traineeService.getTraineeById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/trainee-id/{traineeId}")
-    public ResponseEntity<Trainee> getByTraineeId(@PathVariable String traineeId) {
+    public ResponseEntity<TraineeProfileDTO> getByTraineeId(@PathVariable String traineeId) {
         return traineeService.getTraineeByTraineeId(traineeId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> getTraineeCount() {
+        return ResponseEntity.ok(traineeService.countTrainees());
     }
 }
